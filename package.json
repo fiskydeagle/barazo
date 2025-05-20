@@ -1,0 +1,43 @@
+{
+  "name": "frutella-app",
+  "private": true,
+  "scripts": {
+    "start": "PORT=3301 JWT_SECRET=1QHxcaGKmLhzaQwy2bMMkOYe EMAIL_HOST=smtp.gmail.com EMAIL_PORT=465 EMAIL_SECURE=true EMAIL_USER=fiskydeagle@gmail.com EMAIL_PASS=\"cuqp dejk rjsb fsmj\" EMAIL_FROM=noreplay@frutellafarm.com PUBLIC_FILES_URL=\"http://vps-1d302442.vps.ovh.net/frutella-uploads\" SERVER_FILES_PATH=/home/debian/public_html/frutella-uploads node .output/server/index.mjs",
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
+  },
+  "devDependencies": {
+    "@nuxt/typescript-build": "^3.0.2",
+    "@nuxt/ui": "^2.19.2",
+    "@nuxtjs/i18n": "^9.1.0",
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie": "^0.6.0",
+    "@types/node": "^22.9.0",
+    "@types/nodemailer": "^6.4.17",
+    "@types/yup": "^0.32.0",
+    "autoprefixer": "^10.4.20",
+    "nuxt": "^3.10.0",
+    "postcss": "^8.4.49",
+    "sequelize-cli": "^6.6.2",
+    "tailwindcss": "^3.4.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@nuxtjs/date-fns": "^1.5.0",
+    "bcrypt": "^5.1.1",
+    "cookie": "^0.6.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
+    "mysql2": "^3.11.5",
+    "nodemailer": "^6.9.16",
+    "pm2": "^5.4.3",
+    "prettier": "^3.3.3",
+    "sequelize": "^6.37.5",
+    "sortablejs": "^1.15.6",
+    "vue": "latest",
+    "yup": "^1.4.0"
+  }
+}
