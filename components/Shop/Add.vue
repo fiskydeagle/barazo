@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { type InferType, object, string, mixed } from "yup";
-import { type Supplier } from "~/types";
+import { type InferType, object, string } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 
 const i18n = useI18n();
 
 type Props = {
-  supplier: Supplier;
   isModalOpen: boolean;
   loading: boolean;
 };
@@ -19,20 +17,15 @@ type EmitType = {
 const props = defineProps<Props>();
 const emits = defineEmits<EmitType>();
 
-const { kosovoCities } = useUtils();
-
 const schema = object({
-  company: string().required("Required"),
+  name: string().required("Required"),
 });
 
 type Schema = InferType<typeof schema>;
 
+const formRef = ref();
 const state = reactive({
-  id: props.supplier.id,
-  company: props.supplier.company,
-  city: props.supplier.city,
-  address: props.supplier.address,
-  tel: props.supplier.tel,
+  name: undefined,
 });
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
@@ -49,13 +42,9 @@ const isOpen = computed({
 watch(
   () => isOpen.value,
   (isOpen) => {
-    if (isOpen) {
+    if (!isOpen) {
       Object.assign(state, {
-        id: props.supplier.id,
-        company: props.supplier.company,
-        city: props.supplier.city,
-        address: props.supplier.address,
-        tel: props.supplier.tel,
+        name: undefined,
       });
     }
   },
@@ -69,7 +58,13 @@ watch(
       width: 'w-full sm:max-w-md',
     }"
   >
-    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+    <UForm
+      ref="formRef"
+      :schema="schema"
+      :state="state"
+      class="space-y-4"
+      @submit="onSubmit"
+    >
       <UCard
         :ui="{
           ring: '',
@@ -81,7 +76,7 @@ watch(
             class="flex justify-between items-center text-lg font-normal leading-6"
           >
             <h6 class="text-xl">
-              {{ i18n.t("components.supplier.update.update-supplier") }}
+              {{ i18n.t("components.shop.add.add-shop") }}
             </h6>
             <UButton
               color="gray"
@@ -96,45 +91,12 @@ watch(
         <div class="flex flex-col gap-4">
           <UFormGroup
             size="lg"
-            :label="i18n.t('components.supplier.update.company')"
-            name="company"
+            :label="i18n.t('components.shop.add.name')"
+            name="name"
           >
-            <UInput v-model="state.company" />
+            <UInput v-model="state.name" />
           </UFormGroup>
 
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.supplier.update.city')"
-            name="city"
-          >
-            <USelectMenu
-              v-model="state.city"
-              searchable
-              :searchable-placeholder="
-                i18n.t('components.supplier.update.search-city')
-              "
-              :placeholder="i18n.t('components.supplier.update.city')"
-              :options="kosovoCities"
-              value-attribute="code"
-              option-attribute="name"
-              :search-attributes="['name']"
-            />
-          </UFormGroup>
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.supplier.update.address')"
-            name="address"
-          >
-            <UTextarea v-model="state.address" autoresize />
-          </UFormGroup>
-
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.supplier.update.tel')"
-            name="tel"
-          >
-            <UInput v-model="state.tel" />
-          </UFormGroup>
         </div>
 
         <template #footer>
@@ -146,7 +108,7 @@ watch(
               variant="ghost"
               @click="isOpen = false"
             >
-              {{ i18n.t("components.supplier.update.cancel") }}
+              {{ i18n.t("components.shop.add.cancel") }}
             </UButton>
 
             <UButton
@@ -155,7 +117,7 @@ watch(
               type="submit"
               :loading="loading"
             >
-              {{ i18n.t("components.supplier.update.update") }}
+              {{ i18n.t("components.shop.add.add") }}
             </UButton>
           </div>
         </template>

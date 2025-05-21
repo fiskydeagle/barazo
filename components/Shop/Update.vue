@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { type InferType, object, string, mixed } from "yup";
-import { type Supplier } from "~/types";
+import { type InferType, object, string } from "yup";
+import { type Shop } from "~/types";
 import type { FormSubmitEvent } from "#ui/types";
 
 const i18n = useI18n();
 
 type Props = {
-  supplier: Supplier;
+  shop: Shop;
   isModalOpen: boolean;
   loading: boolean;
 };
@@ -22,17 +22,14 @@ const emits = defineEmits<EmitType>();
 const { kosovoCities } = useUtils();
 
 const schema = object({
-  company: string().required("Required"),
+  name: string().required("Required"),
 });
 
 type Schema = InferType<typeof schema>;
 
 const state = reactive({
-  id: props.supplier.id,
-  company: props.supplier.company,
-  city: props.supplier.city,
-  address: props.supplier.address,
-  tel: props.supplier.tel,
+  id: props.shop.id,
+  name: props.shop.name,
 });
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
@@ -51,11 +48,8 @@ watch(
   (isOpen) => {
     if (isOpen) {
       Object.assign(state, {
-        id: props.supplier.id,
-        company: props.supplier.company,
-        city: props.supplier.city,
-        address: props.supplier.address,
-        tel: props.supplier.tel,
+        id: props.shop.id,
+        name: props.shop.name,
       });
     }
   },
@@ -81,7 +75,7 @@ watch(
             class="flex justify-between items-center text-lg font-normal leading-6"
           >
             <h6 class="text-xl">
-              {{ i18n.t("components.supplier.update.update-supplier") }}
+              {{ i18n.t("components.shop.update.update-shop") }}
             </h6>
             <UButton
               color="gray"
@@ -96,45 +90,12 @@ watch(
         <div class="flex flex-col gap-4">
           <UFormGroup
             size="lg"
-            :label="i18n.t('components.supplier.update.company')"
-            name="company"
+            :label="i18n.t('components.shop.update.name')"
+            name="name"
           >
-            <UInput v-model="state.company" />
+            <UInput v-model="state.name" />
           </UFormGroup>
 
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.supplier.update.city')"
-            name="city"
-          >
-            <USelectMenu
-              v-model="state.city"
-              searchable
-              :searchable-placeholder="
-                i18n.t('components.supplier.update.search-city')
-              "
-              :placeholder="i18n.t('components.supplier.update.city')"
-              :options="kosovoCities"
-              value-attribute="code"
-              option-attribute="name"
-              :search-attributes="['name']"
-            />
-          </UFormGroup>
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.supplier.update.address')"
-            name="address"
-          >
-            <UTextarea v-model="state.address" autoresize />
-          </UFormGroup>
-
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.supplier.update.tel')"
-            name="tel"
-          >
-            <UInput v-model="state.tel" />
-          </UFormGroup>
         </div>
 
         <template #footer>
@@ -146,7 +107,7 @@ watch(
               variant="ghost"
               @click="isOpen = false"
             >
-              {{ i18n.t("components.supplier.update.cancel") }}
+              {{ i18n.t("components.shop.update.cancel") }}
             </UButton>
 
             <UButton
@@ -155,7 +116,7 @@ watch(
               type="submit"
               :loading="loading"
             >
-              {{ i18n.t("components.supplier.update.update") }}
+              {{ i18n.t("components.shop.update.update") }}
             </UButton>
           </div>
         </template>

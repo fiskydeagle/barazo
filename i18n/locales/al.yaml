@@ -87,6 +87,19 @@ pages:
     restore: "Rikthe"
     delete: "Fshije"
     add-supplier: "Shto Furnitorë"
+  shops:
+    shops: "Dyqanet"
+    id: "ID"
+    name: "Emri"
+    created-at: "Krijuar Më"
+    updated-at: "Përditësuar Më"
+    created-by: "Krijuar Nga"
+    updated-by: "Përditësuar Nga"
+    update: "Përditëso"
+    deactivate: "Deaktivizo"
+    restore: "Rikthe"
+    delete: "Fshije"
+    add-shop: "Shto Dyqan"
 components:
   left-navigation:
     home: "Ballina"
@@ -96,6 +109,7 @@ components:
     navigation: "Navigimi"
     suppliers: "Furnitorët"
     sales: "Shitjet"
+    shops: "Dyqanet"
   user:
     add:
       first-name: "Emri"
@@ -163,6 +177,24 @@ components:
         supplier-deactivated: "Furnitori është Deaktivizuar!"
         supplier-restored: "Furnitori është Kthyer!"
         supplier-deleted: "Furnitori është Fshirë!"
+  shop:
+    add:
+      name: "Emri"
+      add-shop: "Shto Dyqan"
+      cancel: "Anulo"
+      add: "Shto"
+      toasts:
+        shop-added: "Dyqani u shtua!"
+    update:
+      name: "Emri"
+      update-shop: "Përditëso Dyqanin"
+      cancel: "Anulo"
+      update: "Përditëso"
+      toasts:
+        shop-updated: "Dyqani është Përditësuar!"
+        shop-deactivated: "Dyqani është Deaktivizuar!"
+        shop-restored: "Dyqani është Kthyer!"
+        shop-deleted: "Dyqani është Fshirë!"
 validations:
   user-not-found: "Përdoruesi nuk u gjet!"
   invalid-email-password: "Emaili i përdoruesit ose fjalëkalimi është gabim."
@@ -179,3 +211,4 @@ page-titles:
   register: "Regjistrohu"
   users: "Përdoruesit"
   suppliers: "Furnitorët"
+  shops: "Shops"

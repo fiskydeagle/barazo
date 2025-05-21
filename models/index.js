@@ -6,6 +6,7 @@ import allConfig from "~~/config/config.json";
 // import all models
 import User from "./user.js";
 import Suppliers from "./suppliers.js";
+import Shops from "./shops.js";
 
 const env = process.env.NODE_ENV || "development";
 const config = allConfig[env];
@@ -26,6 +27,7 @@ if (config.use_env_variable) {
 
 db["Users"] = User(sequelize, DataTypes);
 db["Suppliers"] = Suppliers(sequelize, DataTypes);
+db["Shops"] = Shops(sequelize, DataTypes);
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {

@@ -87,6 +87,19 @@ pages:
     restore: "Restore"
     delete: "Delete"
     add-supplier: "Add Supplier"
+  shops:
+    shops: "Shops"
+    id: "ID"
+    name: "Name"
+    created-at: "Created At"
+    updated-at: "Updated At"
+    created-by: "Created By"
+    updated-by: "Updated By"
+    update: "Update"
+    deactivate: "Deactivate"
+    restore: "Restore"
+    delete: "Delete"
+    add-shop: "Add Shop"
 components:
   left-navigation:
     home: "Home"
@@ -95,6 +108,7 @@ components:
     users: "Users"
     navigation: "Navigation"
     suppliers: "Suppliers"
+    shops: "Shops"
   user:
     add:
       first-name: "First Name"
@@ -130,7 +144,7 @@ components:
       admin: "Admin"
       employee: "Employee"
       toasts:
-        user-updated: "User Updated!",
+        user-updated: "User Updated!"
         user-verified: "User Verified!"
         user-deactivated: "User Deactivated!"
         user-restored: "User Restored!"
@@ -159,10 +173,28 @@ components:
       cancel: "Cancel"
       update: "Update"
       toasts:
-        supplier-updated: "Supplier Updated!",
+        supplier-updated: "Supplier Updated!"
         supplier-deactivated: "Supplier Deactivated!"
         supplier-restored: "Supplier Restored!"
         supplier-deleted: "Supplier Deleted!"
+  shop:
+    add:
+      name: "Name"
+      add-shop: "Add Shop"
+      cancel: "Cancel"
+      add: "Add"
+      toasts:
+        shop-added: "Shop added!"
+    update:
+      name: "Name"
+      update-shop: "Update Shop"
+      cancel: "Cancel"
+      update: "Update"
+      toasts:
+        shop-updated: "Shop Updated!"
+        shop-deactivated: "Shop Deactivated!"
+        shop-restored: "Shop Restored!"
+        shop-deleted: "Shop Deleted!"
 validations:
   user-not-found: "User not found!"
   invalid-email-password: "Invalid Email or password."
@@ -179,3 +211,4 @@ page-titles:
   register: "Register"
   users: "Users"
   suppliers: "Suppliers"
+  shops: "Shops"

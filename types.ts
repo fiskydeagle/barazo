@@ -45,3 +45,15 @@ export interface Supplier {
   createdByUser?: User;
   updatedByUser?: User;
 }
+
+export interface Shop {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  createdBy: string;
+  updatedBy: string;
+  createdByUser?: User;
+  updatedByUser?: User;
+}

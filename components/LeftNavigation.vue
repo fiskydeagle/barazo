@@ -26,6 +26,14 @@ const links = computed(() => {
       },
     ];
 
+    if ([UserRole.SUPERADMIN].includes(user.value?.role)) {
+      topLinks.push({
+        label: i18n.t("components.left-navigation.shops"),
+        icon: "ph:shopping-bag-duotone",
+        to: { name: "shops" },
+      });
+    }
+
     if ([UserRole.ADMIN,UserRole.SUPERADMIN].includes(user.value?.role)) {
       topLinks.push({
         label: i18n.t("components.left-navigation.users"),
