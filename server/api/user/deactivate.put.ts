@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
 
   const user = await db.Users.findOne({
     where: { id: body.userId },
-    attributes: ["id", "updatedBy"],
+    attributes: ["id", "updatedBy", "shopId"],
     paranoid: false,
   });
 
@@ -30,6 +30,16 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       statusMessage: "validations.something-wrong",
+    });
+  }
+
+  if (
+    ![UserRole.SUPERADMIN].includes(event.context.user.role) &&
+    user.dataValues.shopId !== event.context.user.shopId
+  ) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: "validations.not-authorized",
     });
   }
 

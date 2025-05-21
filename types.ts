@@ -20,6 +20,7 @@ export interface User {
   address?: string;
   tel?: string;
   role: UserRole;
+  shopId: number;
   verified: boolean;
   password: string | null | undefined;
   createdAt: string;
@@ -29,6 +30,7 @@ export interface User {
   updatedBy: string;
   createdByUser?: User;
   updatedByUser?: User;
+  shop?: Shop;
 }
 
 export interface Supplier {

@@ -13,7 +13,12 @@ export default defineEventHandler(async (event) => {
     });
   }
   return db.Users.findAll({
-    include: ["createdByUser", "updatedByUser"],
+    ...(![UserRole.SUPERADMIN].includes(event.context.user.role)
+      ? {
+          where: { shopId: event.context.user.shopId },
+        }
+      : {}),
+    include: ["createdByUser", "updatedByUser", "shop"],
     order: [
       ["verified", "ASC"],
       ["createdAt", "DESC"],

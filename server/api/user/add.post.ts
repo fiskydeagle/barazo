@@ -28,7 +28,21 @@ export default defineEventHandler(async (event) => {
   }
 
   const body: Payload = await readBody(event);
+
+  if (
+    ![UserRole.SUPERADMIN].includes(event.context.user.role) &&
+    body.role === UserRole.SUPERADMIN
+  ) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: "validations.not-authorized",
+    });
+  }
+
   const hashedPassword = await bcrypt.hash(body.password, 10);
+  const shopId = [UserRole.SUPERADMIN].includes(event.context.user.role)
+    ? body.shopId
+    : event.context.user.shopId;
 
   try {
     return await db.Users.create({
@@ -36,7 +50,7 @@ export default defineEventHandler(async (event) => {
       lastName: body.lastName,
       email: body.email,
       role: body.role,
-      shopId: body.shopId,
+      shopId: body.role !== UserRole.SUPERADMIN ? shopId : undefined,
       password: hashedPassword,
       city: body.city,
       address: body.address,

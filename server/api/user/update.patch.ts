@@ -27,6 +27,20 @@ export default defineEventHandler(async (event) => {
 
   const body: Payload = await readBody(event);
 
+  if (
+    ![UserRole.SUPERADMIN].includes(event.context.user.role) &&
+    body.role === UserRole.SUPERADMIN
+  ) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: "validations.not-authorized",
+    });
+  }
+
+  const shopId = [UserRole.SUPERADMIN].includes(event.context.user.role)
+    ? body.shopId
+    : event.context.user.shopId;
+
   const user = await db.Users.findOne({
     where: { id: body.id },
     attributes: ["id"],
@@ -45,7 +59,7 @@ export default defineEventHandler(async (event) => {
       firstName: body.firstName,
       lastName: body.lastName,
       role: body.role,
-      shopId: body.shopId,
+      shopId: body.role !== UserRole.SUPERADMIN ? shopId : undefined,
       city: body.city,
       address: body.address,
       tel: body.tel,

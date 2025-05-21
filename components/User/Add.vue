@@ -18,10 +18,10 @@ type EmitType = {
 const props = defineProps<Props>();
 const emits = defineEmits<EmitType>();
 
+const { user } = useAuthUser();
+const { shops, getShops } = useShop();
 const { kosovoCities } = useUtils();
 
-const googleMapsLinkRegex =
-  /^https?:\/\/(www\.)?google\.(com|[a-z]{2})\/maps(\?q=[^&]+|\/search\/|\/place\/|\/@[^,]+,[^,]+,)/;
 const schema = object({
   firstName: string().required("Required"),
   lastName: string().required("Required"),
@@ -30,11 +30,12 @@ const schema = object({
     .min(8, "Must be at least 8 characters")
     .required("Required"),
   role: string().required("Required"),
-  /*userTypeId: number().when("role", {
-    is: (role: UserRole) => role === UserRole.CUSTOMER,
-    then: (schema) => schema.required("Required"),
+  shopId: number().when("role", {
+    is: (role: UserRole) =>
+      role !== UserRole.SUPERADMIN && user.value?.role === UserRole.SUPERADMIN,
+    then: (schema) => schema.required("Required").notOneOf([0], "Required"),
     otherwise: (schema) => schema.notRequired(),
-  }),*/
+  }),
   city: string().required("Required"),
   address: string().required("Required"),
 });
@@ -67,6 +68,15 @@ const isOpen = computed({
 });
 
 watch(
+  () => state.role,
+  (role) => {
+    if (role === UserRole.SUPERADMIN) {
+      state.shopId = undefined;
+    }
+  },
+);
+
+watch(
   () => isOpen.value,
   (isOpen) => {
     if (!isOpen) {
@@ -81,7 +91,7 @@ watch(
         address: undefined,
         tel: undefined,
       });
-    } //else getUserTypes();
+    } else getShops();
   },
   {
     immediate: true,
@@ -136,10 +146,14 @@ watch(
               <USelectMenu
                 v-model="state.role"
                 :options="[
-                  {
-                    id: UserRole.SUPERADMIN,
-                    label: i18n.t('components.user.add.superadmin'),
-                  },
+                  ...(user?.role === UserRole.SUPERADMIN
+                    ? [
+                        {
+                          id: UserRole.SUPERADMIN,
+                          label: i18n.t('components.user.add.superadmin'),
+                        },
+                      ]
+                    : []),
                   {
                     id: UserRole.ADMIN,
                     label: i18n.t('components.user.add.admin'),
@@ -153,20 +167,6 @@ watch(
                 :placeholder="i18n.t('components.user.add.role')"
               />
             </UFormGroup>
-
-            <!--            <UFormGroup
-              size="lg"
-              :label="i18n.t('components.user.add.type')"
-              name="userTypeId"
-            >
-              <USelectMenu
-                v-model="state.userTypeId"
-                :options="userTypes"
-                value-attribute="id"
-                option-attribute="name"
-                :placeholder="i18n.t('components.user.add.type')"
-              />
-            </UFormGroup>-->
 
             <UFormGroup
               size="lg"
@@ -201,6 +201,29 @@ watch(
             </UFormGroup>
           </div>
           <div class="w-full flex flex-col gap-4">
+            <UFormGroup
+              v-if="
+                state.role !== UserRole.SUPERADMIN &&
+                user?.role === UserRole.SUPERADMIN
+              "
+              size="lg"
+              :label="i18n.t('components.user.add.shop')"
+              name="shopId"
+            >
+              <USelectMenu
+                v-model="state.shopId"
+                searchable
+                :searchable-placeholder="
+                  i18n.t('components.user.add.search-shop')
+                "
+                :placeholder="i18n.t('components.user.add.shop')"
+                :options="shops"
+                value-attribute="id"
+                option-attribute="name"
+                :search-attributes="['name']"
+              />
+            </UFormGroup>
+
             <UFormGroup
               size="lg"
               :label="i18n.t('components.user.add.city')"

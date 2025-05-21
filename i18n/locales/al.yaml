@@ -58,6 +58,7 @@ pages:
     name: "Emri"
     email: "Email"
     role: "Roli"
+    shop: "Dyqani"
     city: "Qyteti"
     address: "Adresa"
     tel: "Telefoni"
@@ -108,7 +109,6 @@ components:
     users: "Përdoruesit"
     navigation: "Navigimi"
     suppliers: "Furnitorët"
-    sales: "Shitjet"
     shops: "Dyqanet"
   user:
     add:
@@ -117,6 +117,8 @@ components:
       email: "Email"
       role: "Roli"
       password: "Fjalëkalimi"
+      shop: "Dyqani"
+      search-shop: "Kërko dyqanin"
       city: "Qyteti"
       search-city: "Kërko qytetin"
       address: "Adresa"
@@ -133,6 +135,8 @@ components:
       first-name: "Emri"
       last-name: "Mbiemri"
       role: "Roli"
+      shop: "Dyqani"
+      search-shop: "Kërko dyqanin"
       city: "Qyteti"
       search-city: "Kërko qytetin"
       address: "Adresa"

@@ -60,12 +60,12 @@ const columns = [
     isVisible: true,
     sortable: true,
   },
-  /*{
-    key: "type",
-    label: i18n.t("pages.users.type"),
+  {
+    key: "shop",
+    label: i18n.t("pages.users.shop"),
     isVisible: true,
     sortable: true,
-  },*/
+  },
   {
     key: "cityCol",
     label: i18n.t("pages.users.city"),
@@ -168,7 +168,8 @@ const usersRows = computed(() => {
         email: user.email,
         role: user.role,
         roleCol: i18n.t("components.user.add." + user.role),
-        /*userTypeId: user.userType?.id,*/
+        shopId: user.shopId,
+        shop: user.shop?.name || "-",
         city: user.city,
         cityCol: kosovoCities.find((city) => city.code === user.city)?.name,
         address: user.address,
@@ -188,29 +189,26 @@ const usersRows = computed(() => {
         actions,
       };
     })
-    .filter((order) => {
+    .filter((shop) => {
       if (!searchWord.value) return true;
       return (
-        order.name.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
-        order.email.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
-        order.roleCol.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
-        order.cityCol
+        shop.name.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
+        shop.email.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
+        shop.roleCol.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
+        shop.shop.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
+        shop.cityCol?.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
+        shop.address?.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
+        shop.tel?.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
+        shop.createdAtDate
           ?.toLowerCase()
           .includes(searchWord.value?.toLowerCase()) ||
-        order.address
+        shop.updatedAtDate
           ?.toLowerCase()
           .includes(searchWord.value?.toLowerCase()) ||
-        order.tel?.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
-        order.createdAtDate
+        shop.createdBy
           ?.toLowerCase()
           .includes(searchWord.value?.toLowerCase()) ||
-        order.updatedAtDate
-          ?.toLowerCase()
-          .includes(searchWord.value?.toLowerCase()) ||
-        order.createdBy
-          ?.toLowerCase()
-          .includes(searchWord.value?.toLowerCase()) ||
-        order.updatedBy?.toLowerCase().includes(searchWord.value?.toLowerCase())
+        shop.updatedBy?.toLowerCase().includes(searchWord.value?.toLowerCase())
       );
     });
 });
