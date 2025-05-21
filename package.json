@@ -1,5 +1,5 @@
 {
-  "name": "frutella-app",
+  "name": "barazo-app",
   "private": true,
   "scripts": {
     "start": "PORT=3301 JWT_SECRET=1QHxcaGKmLhzaQwy2bMMkOYe EMAIL_HOST=smtp.gmail.com EMAIL_PORT=465 EMAIL_SECURE=true EMAIL_USER=fiskydeagle@gmail.com EMAIL_PASS=\"cuqp dejk rjsb fsmj\" EMAIL_FROM=noreplay@frutellafarm.com PUBLIC_FILES_URL=\"http://vps-1d302442.vps.ovh.net/frutella-uploads\" SERVER_FILES_PATH=/home/debian/public_html/frutella-uploads node .output/server/index.mjs",

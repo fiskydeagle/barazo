@@ -34,7 +34,7 @@ const links = computed(() => {
       });
     }
 
-    if ([UserRole.ADMIN,UserRole.SUPERADMIN].includes(user.value?.role)) {
+    if ([UserRole.ADMIN, UserRole.SUPERADMIN].includes(user.value?.role)) {
       topLinks.push({
         label: i18n.t("components.left-navigation.users"),
         icon: "ph:users-three-duotone",
@@ -89,9 +89,9 @@ watch(
     <div v-if="windowWidth > 640" class="flex flex-col items-start gap-3">
       <NuxtLink :to="{ name: 'index' }">
         <img
-          src="/frutella.svg"
+          src="/barazo-logo.png"
           :alt="i18n.t('components.left-navigation.home')"
-          class="rounded-full w-20 h-auto ml-5"
+          class="w-20 h-auto ml-5"
         />
       </NuxtLink>
       <UVerticalNavigation :links="links" />
@@ -140,9 +140,9 @@ watch(
           <div class="flex flex-col items-start gap-3 w-full">
             <NuxtLink :to="{ name: 'index' }">
               <img
-                src="/frutella.svg"
+                src="/barazo-logo.png"
                 :alt="i18n.t('components.left-navigation.home')"
-                class="rounded-full w-20 h-auto ml-5"
+                class="w-20 h-auto ml-5"
               />
             </NuxtLink>
             <UVerticalNavigation :links="links" />

@@ -8,9 +8,9 @@ interface Payload {
 
 export default defineEventHandler(async (event) => {
   if (
-      !event.context.user ||
-      !event.context.user.role ||
-      ![UserRole.SUPERADMIN].includes(event.context.user.role)
+    !event.context.user ||
+    !event.context.user.role ||
+    ![UserRole.SUPERADMIN].includes(event.context.user.role)
   ) {
     throw createError({
       statusCode: 403,
@@ -35,6 +35,10 @@ export default defineEventHandler(async (event) => {
 
   try {
     await shop.restore();
+
+    await db.Users.restore({
+      where: { shopId: shop.dataValues.id },
+    });
 
     return await shop.update({
       updatedBy: event.context.user.id,

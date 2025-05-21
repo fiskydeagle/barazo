@@ -8,9 +8,9 @@ interface Payload {
 
 export default defineEventHandler(async (event) => {
   if (
-      !event.context.user ||
-      !event.context.user.role ||
-      ![UserRole.SUPERADMIN].includes(event.context.user.role)
+    !event.context.user ||
+    !event.context.user.role ||
+    ![UserRole.SUPERADMIN].includes(event.context.user.role)
   ) {
     throw createError({
       statusCode: 403,
@@ -20,13 +20,13 @@ export default defineEventHandler(async (event) => {
 
   const body: Payload = await readBody(event);
 
-  const Shop = await db.Shops.findOne({
+  const shop = await db.Shops.findOne({
     where: { id: body.id },
     attributes: ["id", "updatedBy"],
     paranoid: false,
   });
 
-  if (!Shop) {
+  if (!shop) {
     throw createError({
       statusCode: 400,
       statusMessage: "validations.something-wrong",
@@ -34,9 +34,13 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    await Shop.destroy();
+    await shop.destroy();
 
-    return await Shop.update({
+    await db.Users.destroy({
+      where: { shopId: shop.dataValues.id },
+    });
+
+    return await shop.update({
       updatedBy: event.context.user.id,
     });
   } catch (error: any) {

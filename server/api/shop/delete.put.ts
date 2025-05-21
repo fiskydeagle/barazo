@@ -8,9 +8,9 @@ interface Payload {
 
 export default defineEventHandler(async (event) => {
   if (
-      !event.context.user ||
-      !event.context.user.role ||
-      ![UserRole.SUPERADMIN].includes(event.context.user.role)
+    !event.context.user ||
+    !event.context.user.role ||
+    ![UserRole.SUPERADMIN].includes(event.context.user.role)
   ) {
     throw createError({
       statusCode: 403,
@@ -34,6 +34,10 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    await db.Users.destroy({
+      where: { shopId: shop.dataValues.id },
+    });
+
     return await shop.destroy({ force: true });
   } catch (error: any) {
     if (error instanceof Sequelize.ValidationError) {
