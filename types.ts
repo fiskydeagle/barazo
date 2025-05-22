@@ -59,3 +59,24 @@ export interface Shop {
   createdByUser?: User;
   updatedByUser?: User;
 }
+
+export interface Purchase {
+  id: number;
+  date: string;
+  amount: number;
+  isDeclared: boolean;
+  invoiceNumber?: string;
+  comment?: string;
+  shopId: number;
+  supplierId: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  createdBy: string;
+  updatedBy: string;
+  createdByUser?: User;
+  updatedByUser?: User;
+  shop?: Shop;
+  supplier?: Supplier;
+  supplierName?: string;
+}

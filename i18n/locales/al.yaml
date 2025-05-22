@@ -12,6 +12,7 @@ pages:
     home: "Ballina"
     add-user: "Shto përdorues"
     add-supplier: "Shto furnitorë"
+    add-purchase: "Shto blerje"
   login:
     login: "Kyçu"
     email: "Email"
@@ -101,6 +102,23 @@ pages:
     restore: "Rikthe"
     delete: "Fshije"
     add-shop: "Shto Dyqan"
+  purchases:
+    purchases: "Blerjet"
+    id: "ID"
+    date: "Data"
+    amount: "Shuma"
+    is-declared: "E Deklaruar"
+    invoice-number: "Numri i Faturës"
+    comment: "Komenti"
+    shop: "Dyqani"
+    supplier: "Furnitori"
+    created-at: "Krijuar Më"
+    updated-at: "Përditësuar Më"
+    created-by: "Krijuar Nga"
+    updated-by: "Përditësuar Nga"
+    update: "Përditëso"
+    delete: "Fshije"
+    add-purchase: "Shto Blerje"
 components:
   left-navigation:
     home: "Ballina"
@@ -110,6 +128,7 @@ components:
     navigation: "Navigimi"
     suppliers: "Furnitorët"
     shops: "Dyqanet"
+    purchases: "Blerjet"
   user:
     add:
       first-name: "Emri"
@@ -199,6 +218,40 @@ components:
         shop-deactivated: "Dyqani është Deaktivizuar!"
         shop-restored: "Dyqani është Kthyer!"
         shop-deleted: "Dyqani është Fshirë!"
+  purchase:
+    add:
+      date: "Data"
+      amount: "Shuma"
+      is-declared: "E Deklaruar"
+      invoice-number: "Numri i Faturës"
+      comment: "Komenti"
+      shop: "Dyqani"
+      search-shop: "Kërko dyqanin"
+      supplier: "Furnitori"
+      search-supplier: "Kërko furnitorin"
+      new-supplier: "Furnitori i ri"
+      add-purchase: "Shto Blerje"
+      cancel: "Anulo"
+      add: "Shto"
+      toasts:
+        purchase-added: "Blerje u shtua!"
+    update:
+      date: "Data"
+      amount: "Shuma"
+      is-declared: "E Deklaruar"
+      invoice-number: "Numri i Faturës"
+      comment: "Komenti"
+      shop: "Dyqani"
+      search-shop: "Kërko dyqanin"
+      supplier: "Furnitori"
+      search-supplier: "Kërko furnitorin"
+      new-supplier: "Furnitori i ri"
+      update-purchase: "Përditëso Blerjen"
+      cancel: "Anulo"
+      update: "Përditëso"
+      toasts:
+        purchase-updated: "Blerja është Përditësuar!"
+        purchase-deleted: "Blerja është Fshirë!"
 validations:
   user-not-found: "Përdoruesi nuk u gjet!"
   invalid-email-password: "Emaili i përdoruesit ose fjalëkalimi është gabim."
@@ -216,3 +269,4 @@ page-titles:
   users: "Përdoruesit"
   suppliers: "Furnitorët"
   shops: "Shops"
+  purchases: "Blerjet"

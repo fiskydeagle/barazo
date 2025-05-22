@@ -11,7 +11,7 @@ type Props = {
 
 type EmitType = {
   (event: "onClose"): void;
-  (event: "onSubmit", product: typeof state): void;
+  (event: "onSubmit", shop: typeof state): void;
 };
 
 const props = defineProps<Props>();
@@ -96,7 +96,6 @@ watch(
           >
             <UInput v-model="state.name" />
           </UFormGroup>
-
         </div>
 
         <template #footer>

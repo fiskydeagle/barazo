@@ -135,9 +135,7 @@ const shopsRows = computed(() => {
     .filter((order) => {
       if (!searchWord.value) return true;
       return (
-        order.name
-          ?.toLowerCase()
-          .includes(searchWord.value?.toLowerCase()) ||
+        order.name?.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
         order.createdAtDate
           ?.toLowerCase()
           .includes(searchWord.value?.toLowerCase()) ||
@@ -177,7 +175,9 @@ const shopUpdateModal = ref<boolean>(false);
 const shopUpdateLoading = ref<boolean>(false);
 const updateShopAction = (row: any) => {
   shopToUpdate.value = row;
-  shopUpdateModal.value = true;
+  setTimeout(() => {
+    shopUpdateModal.value = true;
+  }, 100);
 };
 const onUpdateShop = async (state: any) => {
   shopUpdateLoading.value = true;

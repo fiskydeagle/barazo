@@ -48,11 +48,11 @@ const links = computed(() => {
       });
     }
 
-    /*topLinks.push({
-      label: i18n.t("components.left-navigation.orders"),
-      icon: "ph:shopping-cart-simple-duotone",
-      to: { name: "orders" },
-    });*/
+    topLinks.push({
+      label: i18n.t("components.left-navigation.purchases"),
+      icon: "ph:money-wavy-duotone",
+      to: { name: "purchases" },
+    });
 
     links.push(topLinks);
     links.push(userLinks);

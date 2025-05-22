@@ -28,7 +28,6 @@ const { user } = useAuthUser();
     <h1 class="text-3xl text-center mb-4">{{ i18n.t("pages.index.home") }}</h1>
     <div class="flex justify-center">
       <div class="grid grid-cols-2 gap-4">
-
         <UButton
           v-if="[UserRole.SUPERADMIN, UserRole.ADMIN].includes(user.role)"
           icon="ph:users-three-duotone"
@@ -67,6 +66,26 @@ const { user } = useAuthUser();
           }"
           :to="{
             name: 'suppliers',
+            query: {
+              modal: true,
+            },
+          }"
+        />
+        <UButton
+          icon="ph:money-wavy-duotone"
+          size="xl"
+          color="gray"
+          :label="i18n.t('pages.index.add-purchase')"
+          class="flex-col"
+          :ui="{
+            icon: {
+              size: {
+                xl: 'h-10 w-10',
+              },
+            },
+          }"
+          :to="{
+            name: 'purchases',
             query: {
               modal: true,
             },

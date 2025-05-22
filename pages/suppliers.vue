@@ -207,7 +207,9 @@ const supplierUpdateModal = ref<boolean>(false);
 const supplierUpdateLoading = ref<boolean>(false);
 const updateSupplierAction = (row: any) => {
   supplierToUpdate.value = row;
-  supplierUpdateModal.value = true;
+  setTimeout(() => {
+    supplierUpdateModal.value = true;
+  }, 100);
 };
 const onUpdateSupplier = async (state: any) => {
   supplierUpdateLoading.value = true;

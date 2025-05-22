@@ -12,6 +12,7 @@ pages:
     home: "Home"
     add-user: "Add user"
     add-supplier: "Add supplier"
+    add-purchase: "Add purchase"
   login:
     login: "Login"
     email: "Email"
@@ -101,6 +102,23 @@ pages:
     restore: "Restore"
     delete: "Delete"
     add-shop: "Add Shop"
+  purchases:
+    purchases: "Purchases"
+    id: "ID"
+    date: "Date"
+    amount: "Amount"
+    is-declared: "Is Declared"
+    invoice-number: "Invoice Number"
+    comment: "Comment"
+    shop: "Shop"
+    supplier: "Supplier"
+    created-at: "Created At"
+    updated-at: "Updated At"
+    created-by: "Created By"
+    updated-by: "Updated By"
+    update: "Update"
+    delete: "Delete"
+    add-purchase: "Add Purchase"
 components:
   left-navigation:
     home: "Home"
@@ -110,6 +128,7 @@ components:
     navigation: "Navigation"
     suppliers: "Suppliers"
     shops: "Shops"
+    purchases: "Purchases"
   user:
     add:
       first-name: "First Name"
@@ -199,6 +218,40 @@ components:
         shop-deactivated: "Shop Deactivated!"
         shop-restored: "Shop Restored!"
         shop-deleted: "Shop Deleted!"
+  purchase:
+    add:
+      date: "Date"
+      amount: "Amount"
+      is-declared: "Is Declared"
+      invoice-number: "Invoice Number"
+      comment: "Comment"
+      shop: "Shop"
+      search-shop: "Search shop"
+      supplier: "Supplier"
+      search-supplier: "Search supplier"
+      new-supplier: "New supplier"
+      add-purchase: "Add Purchase"
+      cancel: "Cancel"
+      add: "Add"
+      toasts:
+        purchase-added: "Purchase added!"
+    update:
+      date: "Date"
+      amount: "Amount"
+      is-declared: "Is Declared"
+      invoice-number: "Invoice Number"
+      comment: "Comment"
+      shop: "Shop"
+      search-shop: "Search shop"
+      supplier: "Supplier"
+      search-supplier: "Search supplier"
+      new-supplier: "New supplier"
+      update-purchase: "Update Purchase"
+      cancel: "Cancel"
+      update: "Update"
+      toasts:
+        purchase-updated: "Purchase Updated!"
+        purchase-deleted: "Purchase Deleted!"
 validations:
   user-not-found: "User not found!"
   invalid-email-password: "Invalid Email or password."
@@ -216,3 +269,4 @@ page-titles:
   users: "Users"
   suppliers: "Suppliers"
   shops: "Shops"
+  purchases: "Purchases"

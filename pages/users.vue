@@ -236,7 +236,9 @@ const userUpdateModal = ref<boolean>(false);
 const userUpdateLoading = ref<boolean>(false);
 const updateUserAction = (row: any) => {
   userToUpdate.value = row;
-  userUpdateModal.value = true;
+  setTimeout(() => {
+    userUpdateModal.value = true;
+  }, 100);
 };
 const onUpdateUser = async (state: any) => {
   userUpdateLoading.value = true;

@@ -13,7 +13,7 @@ type Props = {
 
 type EmitType = {
   (event: "onClose"): void;
-  (event: "onSubmit", product: typeof state): void;
+  (event: "onSubmit", supplier: typeof state): void;
 };
 
 const props = defineProps<Props>();
