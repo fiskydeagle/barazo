@@ -54,6 +54,12 @@ const links = computed(() => {
       to: { name: "purchases" },
     });
 
+    topLinks.push({
+      label: i18n.t("components.left-navigation.draws"),
+      icon: "ph:hand-deposit-duotone",
+      to: { name: "draws" },
+    });
+
     links.push(topLinks);
     links.push(userLinks);
   }

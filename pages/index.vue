@@ -91,6 +91,26 @@ const { user } = useAuthUser();
             },
           }"
         />
+        <UButton
+          icon="ph:hand-deposit-duotone"
+          size="xl"
+          color="gray"
+          :label="i18n.t('pages.index.add-draw')"
+          class="flex-col"
+          :ui="{
+            icon: {
+              size: {
+                xl: 'h-10 w-10',
+              },
+            },
+          }"
+          :to="{
+            name: 'draws',
+            query: {
+              modal: true,
+            },
+          }"
+        />
       </div>
     </div>
   </div>

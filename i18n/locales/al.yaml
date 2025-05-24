@@ -13,6 +13,7 @@ pages:
     add-user: "Shto përdorues"
     add-supplier: "Shto furnitorë"
     add-purchase: "Shto blerje"
+    add-draw: "Bëje barazimin"
   login:
     login: "Kyçu"
     email: "Email"
@@ -119,6 +120,20 @@ pages:
     update: "Përditëso"
     delete: "Fshije"
     add-purchase: "Shto Blerje"
+  draws:
+    draws: "Barazimet"
+    id: "ID"
+    date: "Data"
+    totalAmount: "Shuma Totale"
+    comment: "Komenti"
+    shop: "Dyqani"
+    created-at: "Krijuar Më"
+    updated-at: "Përditësuar Më"
+    created-by: "Krijuar Nga"
+    updated-by: "Përditësuar Nga"
+    update: "Përditëso"
+    delete: "Fshije"
+    add-draw: "Bëje barazimin"
 components:
   left-navigation:
     home: "Ballina"
@@ -129,6 +144,7 @@ components:
     suppliers: "Furnitorët"
     shops: "Dyqanet"
     purchases: "Blerjet"
+    draws: "Barazimet"
   user:
     add:
       first-name: "Emri"
@@ -252,6 +268,34 @@ components:
       toasts:
         purchase-updated: "Blerja është Përditësuar!"
         purchase-deleted: "Blerja është Fshirë!"
+  draw:
+    add:
+      date: "Data"
+      cashAmount: "Shuma Kesh (Cash)"
+      totalAmount: "Shuma Totale"
+      systemAmount: "Shuma në Sistem"
+      comment: "Komenti"
+      shop: "Dyqani"
+      search-shop: "Kërko dyqanin"
+      add-draw: "Bëje barazimin"
+      cancel: "Anulo"
+      add: "Shto"
+      toasts:
+        draw-added: "Barazimi u shtua!"
+    update:
+      date: "Data"
+      cashAmount: "Shuma Kesh (Cash)"
+      totalAmount: "Shuma Totale"
+      systemAmount: "Shuma në Sistem"
+      comment: "Komenti"
+      shop: "Dyqani"
+      search-shop: "Kërko dyqanin"
+      update-draw: "Përditëso Barazimin"
+      cancel: "Anulo"
+      update: "Përditëso"
+      toasts:
+        draw-updated: "Barazimi është Përditësuar!"
+        draw-deleted: "Barazimi është Fshirë!"
 validations:
   user-not-found: "Përdoruesi nuk u gjet!"
   invalid-email-password: "Emaili i përdoruesit ose fjalëkalimi është gabim."
@@ -270,3 +314,4 @@ page-titles:
   suppliers: "Furnitorët"
   shops: "Shops"
   purchases: "Blerjet"
+  draws: "Barazimet"

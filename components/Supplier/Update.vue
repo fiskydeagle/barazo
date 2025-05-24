@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type InferType, object, string, mixed } from "yup";
+import { type InferType, object, string } from "yup";
 import { type Supplier } from "~/types";
 import type { FormSubmitEvent } from "#ui/types";
 

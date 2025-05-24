@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type InferType, object, string, mixed } from "yup";
+import { type InferType, object, string } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
 
 const i18n = useI18n();

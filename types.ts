@@ -80,3 +80,21 @@ export interface Purchase {
   supplier?: Supplier;
   supplierName?: string;
 }
+
+export interface Draw {
+  id: number;
+  date: string;
+  cashAmount: number;
+  totalAmount: number;
+  systemAmount: number;
+  comment?: string;
+  shopId: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  createdBy: string;
+  updatedBy: string;
+  createdByUser?: User;
+  updatedByUser?: User;
+  shop?: Shop;
+}

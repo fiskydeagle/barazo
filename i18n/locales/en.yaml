@@ -13,6 +13,7 @@ pages:
     add-user: "Add user"
     add-supplier: "Add supplier"
     add-purchase: "Add purchase"
+    add-draw: "Make a draw"
   login:
     login: "Login"
     email: "Email"
@@ -119,6 +120,20 @@ pages:
     update: "Update"
     delete: "Delete"
     add-purchase: "Add Purchase"
+  draws:
+    draws: "Draws"
+    id: "ID"
+    date: "Date"
+    totalAmount: "Total Amount"
+    comment: "Comment"
+    shop: "Shop"
+    created-at: "Created At"
+    updated-at: "Updated At"
+    created-by: "Created By"
+    updated-by: "Updated By"
+    update: "Update"
+    delete: "Delete"
+    add-draw: "Make a draw"
 components:
   left-navigation:
     home: "Home"
@@ -129,6 +144,7 @@ components:
     suppliers: "Suppliers"
     shops: "Shops"
     purchases: "Purchases"
+    draws: "Draws"
   user:
     add:
       first-name: "First Name"
@@ -252,6 +268,34 @@ components:
       toasts:
         purchase-updated: "Purchase Updated!"
         purchase-deleted: "Purchase Deleted!"
+  draw:
+    add:
+      date: "Date"
+      cashAmount: "Cash Amount"
+      totalAmount: "Total Amount"
+      systemAmount: "System Amount"
+      comment: "Comment"
+      shop: "Shop"
+      search-shop: "Search shop"
+      add-draw: "Make a draw"
+      cancel: "Cancel"
+      add: "Add"
+      toasts:
+        draw-added: "Draw added!"
+    update:
+      date: "Date"
+      cashAmount: "Cash Amount"
+      totalAmount: "Total Amount"
+      systemAmount: "System Amount"
+      comment: "Comment"
+      shop: "Shop"
+      search-shop: "Search shop"
+      update-draw: "Update Draw"
+      cancel: "Cancel"
+      update: "Update"
+      toasts:
+        draw-updated: "Draw Updated!"
+        draw-deleted: "Draw Deleted!"
 validations:
   user-not-found: "User not found!"
   invalid-email-password: "Invalid Email or password."
@@ -270,3 +314,4 @@ page-titles:
   suppliers: "Suppliers"
   shops: "Shops"
   purchases: "Purchases"
+  draws: "Draws"
