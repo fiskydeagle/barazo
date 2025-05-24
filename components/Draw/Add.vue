@@ -65,13 +65,29 @@ const purchaseColumns = [
   },
 ];
 
+const currentDraws = computed(() => {
+  if (!infos.value?.draws || !infos.value?.draws.length) return [];
+
+  return infos.value?.draws.filter((draw) => {
+    const drawDate = new Date(draw.date).getTime();
+    return !state.date || drawDate < new Date(state.date.toString()).getTime();
+  });
+});
+
 const currentPurchases = computed(() => {
   if (!infos.value?.purchases || !infos.value?.purchases.length) return [];
 
-  const lastDrawDate =
+  const lastDraw =
     infos.value?.draws && infos.value?.draws.length
-      ? new Date(infos.value?.draws[0].date).getTime()
+      ? infos.value?.draws.find(
+          (draw) =>
+            !state.date ||
+            new Date(draw.date).getTime() <
+              new Date(state.date.toString()).getTime(),
+        )
       : undefined;
+
+  const lastDrawDate = lastDraw ? new Date(lastDraw.date).getTime() : undefined;
 
   return infos.value?.purchases.filter((purchase) => {
     const currentPurchaseDate = new Date(purchase.date).getTime();
@@ -92,13 +108,23 @@ const totalCurrentPurchase = computed(() => {
 
 const lastCashAmount = computed(() => {
   return infos.value?.draws && infos.value?.draws.length
-    ? infos.value?.draws[0].cashAmount
+    ? infos.value?.draws.find(
+        (draw) =>
+          !state.date ||
+          new Date(draw.date).getTime() <
+            new Date(state.date.toString()).getTime(),
+      )?.cashAmount || 0
     : 0;
 });
 
 const lastSystemAmount = computed(() => {
   return infos.value?.draws && infos.value?.draws.length
-    ? infos.value?.draws[0].systemAmount
+    ? infos.value?.draws.find(
+        (draw) =>
+          !state.date ||
+          new Date(draw.date).getTime() <
+            new Date(state.date.toString()).getTime(),
+      )?.systemAmount || 0
     : 0;
 });
 
@@ -435,11 +461,11 @@ const dateValidation = async () => {
             <UTextarea v-model="state.comment"></UTextarea>
           </UFormGroup>
 
-          <div v-if="infos?.draws.length" class="mb-4">
+          <div v-if="currentDraws.length" class="mb-4">
             <h2 class="border-b border-neutral-300 text-lg font-semibold pb-2">
               {{ i18n.t("pages.draws.draws") }}
             </h2>
-            <UTable :columns="drawColumns" :rows="infos?.draws">
+            <UTable :columns="drawColumns" :rows="currentDraws">
               <template #date-data="{ row }">
                 {{ format(new Date(row.date), "dd.MM.yyyy HH:mm") }}
               </template>
