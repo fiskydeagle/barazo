@@ -133,7 +133,7 @@ const purchasesRows = computed(() => {
       return {
         id: purchase.id,
         date: new Date(purchase.date).getTime(),
-        dateDate: format(new Date(purchase.date), "dd.MM.yyyy"),
+        dateDate: format(new Date(purchase.date), "dd.MM.yyyy HH:mm"),
         amount: purchase.amount,
         isDeclared: purchase.isDeclared,
         invoiceNumber: purchase.invoiceNumber,

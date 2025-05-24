@@ -52,6 +52,12 @@ const columns = [
     sortable: true,
   },
   {
+    key: "plusMinus",
+    label: i18n.t("pages.draws.plusMinus"),
+    isVisible: true,
+    sortable: true,
+  },
+  {
     key: "shop",
     label: i18n.t("pages.draws.shop"),
     isVisible: false,
@@ -116,9 +122,10 @@ const drawsRows = computed(() => {
       return {
         id: draw.id,
         date: new Date(draw.date).getTime(),
-        dateDate: format(new Date(draw.date), "dd.MM.yyyy"),
+        dateDate: format(new Date(draw.date), "dd.MM.yyyy HH:mm"),
         cashAmount: draw.cashAmount,
         totalAmount: draw.totalAmount,
+        plusMinus: draw.plusMinus,
         systemAmount: draw.systemAmount,
         comment: draw.comment,
         shopId: draw.shopId,
@@ -145,6 +152,7 @@ const drawsRows = computed(() => {
         order.totalAmount
           ?.toString()
           .includes(searchWord.value?.toLowerCase()) ||
+        order.plusMinus?.toString().includes(searchWord.value?.toLowerCase()) ||
         order.shop?.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
         order.comment
           ?.toLowerCase()
@@ -257,7 +265,11 @@ onMounted(() => {
         </template>
 
         <template #totalAmount-data="{ row }">
-          {{ row.totalAmount }}€
+          {{ row.totalAmount.toFixed(2) }}€
+        </template>
+
+        <template #plusMinus-data="{ row }">
+          {{ row.plusMinus.toFixed(2) }}€
         </template>
 
         <template #comment-data="{ row }">

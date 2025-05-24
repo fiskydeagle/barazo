@@ -22,6 +22,112 @@ const emits = defineEmits<EmitType>();
 
 const { user } = useAuthUser();
 const { shops, getShops } = useShop();
+const { infos, getInfos } = useDraw();
+
+const drawColumns = [
+  {
+    key: "date",
+    label: i18n.t("pages.draws.date"),
+  },
+  {
+    key: "comment",
+    label: i18n.t("pages.draws.comment"),
+  },
+  {
+    key: "cashAmount",
+    label: i18n.t("pages.draws.cashAmount"),
+  },
+  {
+    key: "systemAmount",
+    label: i18n.t("pages.draws.systemAmount"),
+  },
+  {
+    key: "createdBy",
+    label: i18n.t("pages.draws.created-by"),
+  },
+];
+
+const purchaseColumns = [
+  {
+    key: "date",
+    label: i18n.t("pages.purchases.date"),
+  },
+  {
+    key: "comment",
+    label: i18n.t("pages.purchases.comment"),
+  },
+  {
+    key: "amount",
+    label: i18n.t("pages.purchases.amount"),
+  },
+  {
+    key: "createdBy",
+    label: i18n.t("pages.purchases.created-by"),
+  },
+];
+
+const currentDraws = computed(() => {
+  if (!infos.value?.draws || !infos.value?.draws.length) return [];
+
+  return infos.value?.draws.filter((draw) => {
+    const drawDate = new Date(draw.date).getTime();
+    return (
+      !state.dateObject ||
+      drawDate < new Date(state.dateObject.toString()).getTime()
+    );
+  });
+});
+
+const currentPurchases = computed(() => {
+  if (!infos.value?.purchases || !infos.value?.purchases.length) return [];
+
+  const lastDraw =
+    infos.value?.draws && infos.value?.draws.length
+      ? infos.value?.draws.find(
+          (draw) =>
+            new Date(draw.date).getTime() <
+            new Date(state.dateObject.toString()).getTime(),
+        )
+      : undefined;
+
+  const lastDrawDate = lastDraw ? new Date(lastDraw.date).getTime() : undefined;
+
+  return infos.value?.purchases.filter((purchase) => {
+    const currentPurchaseDate = new Date(purchase.date).getTime();
+
+    return (
+      (!lastDrawDate || currentPurchaseDate > lastDrawDate) &&
+      (!state.dateObject ||
+        currentPurchaseDate <= new Date(state.dateObject.toString()).getTime())
+    );
+  });
+});
+
+const totalCurrentPurchase = computed(() => {
+  return currentPurchases.value.reduce((acc, purchase) => {
+    return acc + (purchase.amount || 0);
+  }, 0);
+});
+
+const lastCashAmount = computed(() => {
+  return infos.value?.draws && infos.value?.draws.length
+    ? infos.value?.draws.find(
+        (draw) =>
+          new Date(draw.date).getTime() <
+          new Date(state.dateObject.toString()).getTime(),
+      )?.cashAmount || 0
+    : 0;
+});
+
+const lastSystemAmount = computed(() => {
+  return infos.value?.draws && infos.value?.draws.length
+    ? infos.value?.draws.find(
+        (draw) =>
+          new Date(draw.date).getTime() <
+          new Date(state.dateObject.toString()).getTime(),
+      )?.systemAmount || 0
+    : 0;
+});
 
 const schema = object({
   cashAmount: number()
@@ -61,6 +167,8 @@ const state = reactive({
   date: props.draw.date as string | undefined,
   dateObject: new Date(props.draw.date),
   cashAmount: props.draw.cashAmount,
+  totalAmount: undefined as number | undefined,
+  plusMinus: undefined as number | undefined,
   systemAmount: props.draw.systemAmount,
   comment: props.draw.comment,
   shopId: props.draw.shopId,
@@ -70,8 +178,14 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   emits("onSubmit", {
     ...state,
     date: state.dateObject
-      ? format(new Date(state.dateObject.toString()), "yyyy-MM-dd")
+      ? format(new Date(state.dateObject.toString()), "yyyy-MM-dd HH:mm")
       : undefined,
+    totalAmount: (state.cashAmount || 0) - lastCashAmount.value,
+    plusMinus:
+      totalCurrentPurchase.value +
+      (state.cashAmount || 0) -
+      lastCashAmount.value -
+      ((state.systemAmount || 0) - lastSystemAmount.value),
   });
 };
 
@@ -97,10 +211,40 @@ watch(
         date: props.draw.date,
         dateObject: new Date(props.draw.date),
         cashAmount: props.draw.cashAmount,
+        totalAmount: props.draw.totalAmount,
+        plusMinus: props.draw.plusMinus,
         systemAmount: props.draw.systemAmount,
         comment: props.draw.comment,
         shopId: props.draw.shopId,
       });
+    }
+  },
+);
+
+watch(
+  () => state.shopId,
+  (shopId) => {
+    if (shopId && state.dateObject) {
+      getInfos(
+        shopId.toString(),
+        state.date
+          ? format(new Date(state.dateObject.toString()), "yyyy-MM-dd HH:mm")
+          : undefined,
+      );
+    }
+  },
+);
+
+watch(
+  () => state.dateObject,
+  (date) => {
+    if (state.shopId && date) {
+      getInfos(
+        state.shopId.toString(),
+        date
+          ? format(new Date(date.toString()), "yyyy-MM-dd HH:mm")
+          : undefined,
+      );
     }
   },
 );
@@ -156,18 +300,11 @@ const dateValidation = async () => {
             :label="i18n.t('components.draw.update.shop')"
             name="shopId"
           >
-            <USelectMenu
-              v-model="state.shopId"
-              searchable
-              :searchable-placeholder="
-                i18n.t('components.draw.update.search-shop')
-              "
-              :placeholder="i18n.t('components.draw.update.shop')"
-              :options="shops"
-              value-attribute="id"
-              option-attribute="name"
-              :search-attributes="['name']"
-            />
+            <p>
+              {{
+                shops ? shops.find((shop) => shop.id == state.shopId)?.name : ""
+              }}
+            </p>
           </UFormGroup>
 
           <UFormGroup
@@ -180,41 +317,22 @@ const dateValidation = async () => {
             :label="i18n.t('components.draw.update.date')"
             name="date"
           >
-            <UPopover
-              :popper="{ placement: 'bottom-start' }"
-              class="[&>*]:block"
-            >
-              <UInput
-                :model-value="
-                  state.date &&
-                  format(new Date(state.dateObject.toString()), 'dd/MM/yyy')
-                "
-                placeholder="DD/MM/YYYY"
-                autocomplete="off"
-                @keydown="
-                  (e: any) => {
-                    if (e.which !== 9) e.preventDefault();
-                  }
-                "
-              >
-                <template #leading>
-                  <UIcon
-                    class="text-neutral-500 pointer-events-none text-xl"
-                    name="fa6-regular:calendar-days"
-                  />
-                </template>
-              </UInput>
+            <p>
+              {{
+                format(
+                  new Date(state.dateObject.toString()),
+                  "yyyy-MM-dd HH:mm",
+                )
+              }}
+            </p>
+          </UFormGroup>
 
-              <template #panel>
-                <InputsDatePicker
-                  v-model="state.dateObject"
-                  mode="date"
-                  :max-date="new Date()"
-                  is-required
-                  @close="dateValidation()"
-                />
-              </template>
-            </UPopover>
+          <UFormGroup
+            size="lg"
+            :label="i18n.t('components.draw.update.totalPurchase')"
+            name="totalCurrentPurchase"
+          >
+            <p>{{ totalCurrentPurchase.toFixed(2) }}€</p>
           </UFormGroup>
 
           <UFormGroup
@@ -232,6 +350,24 @@ const dateValidation = async () => {
 
           <UFormGroup
             size="lg"
+            :label="i18n.t('components.draw.update.totalAmount')"
+            name="totalAmount"
+          >
+            <p>
+              {{
+                state.cashAmount
+                  ? (
+                      totalCurrentPurchase +
+                      state.cashAmount -
+                      lastCashAmount
+                    ).toFixed(2)
+                  : "0.00"
+              }}€
+            </p>
+          </UFormGroup>
+
+          <UFormGroup
+            size="lg"
             :label="i18n.t('components.draw.update.systemAmount')"
             name="systemAmount"
           >
@@ -245,11 +381,89 @@ const dateValidation = async () => {
 
           <UFormGroup
             size="lg"
+            :label="i18n.t('components.draw.update.result')"
+            name="result"
+          >
+            <p>
+              {{
+                state.cashAmount && state.systemAmount
+                  ? (state.systemAmount - lastSystemAmount).toFixed(2)
+                  : "0.00"
+              }}€
+            </p>
+          </UFormGroup>
+
+          <UFormGroup
+            size="lg"
+            :label="i18n.t('components.draw.update.plus-minus')"
+            name="plusMinus"
+          >
+            <p>
+              {{
+                state.cashAmount && state.systemAmount
+                  ? (
+                      totalCurrentPurchase +
+                      state.cashAmount -
+                      lastCashAmount -
+                      (state.systemAmount - lastSystemAmount)
+                    ).toFixed(2)
+                  : "0.00"
+              }}€
+            </p>
+          </UFormGroup>
+
+          <UFormGroup
+            size="lg"
             :label="i18n.t('components.draw.update.comment')"
             name="comment"
           >
             <UTextarea v-model="state.comment"></UTextarea>
           </UFormGroup>
+
+          <div v-if="currentDraws.length" class="mb-4">
+            <h2 class="border-b border-neutral-300 text-lg font-semibold pb-2">
+              {{ i18n.t("pages.draws.draws") }}
+            </h2>
+            <UTable :columns="drawColumns" :rows="currentDraws">
+              <template #date-data="{ row }">
+                {{ format(new Date(row.date), "dd.MM.yyyy HH:mm") }}
+              </template>
+              <template #createdBy-data="{ row }">
+                {{
+                  row.createdByUser
+                    ? `${row.createdByUser.firstName} ${row.createdByUser.lastName}`
+                    : "-"
+                }}
+              </template>
+              <template #cashAmount-data="{ row }">
+                {{ row.cashAmount.toFixed(2) }}€
+              </template>
+              <template #systemAmount-data="{ row }">
+                {{ row.systemAmount.toFixed(2) }}€
+              </template>
+            </UTable>
+          </div>
+
+          <div v-if="currentPurchases.length">
+            <h2 class="border-b border-neutral-300 text-lg font-semibold pb-2">
+              {{ i18n.t("pages.purchases.purchases") }}
+            </h2>
+            <UTable :columns="purchaseColumns" :rows="currentPurchases">
+              <template #date-data="{ row }">
+                {{ format(new Date(row.date), "dd.MM.yyyy HH:mm") }}
+              </template>
+              <template #createdBy-data="{ row }">
+                {{
+                  row.createdByUser
+                    ? `${row.createdByUser.firstName} ${row.createdByUser.lastName}`
+                    : "-"
+                }}
+              </template>
+              <template #amount-data="{ row }">
+                {{ row.amount.toFixed(2) }}€
+              </template>
+            </UTable>
+          </div>
         </div>
 
         <template #footer>

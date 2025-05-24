@@ -68,7 +68,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     return await db.Purchases.create({
-      date: format(date, "yyyy-MM-dd"),
+      date: format(date, "yyyy-MM-dd HH:mm"),
       amount: body.amount,
       isDeclared: body.isDeclared,
       invoiceNumber: body.invoiceNumber || undefined,

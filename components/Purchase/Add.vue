@@ -65,7 +65,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   emits("onSubmit", {
     ...state,
     date: state.date
-      ? format(new Date(state.date.toString()), "yyyy-MM-dd")
+      ? format(new Date(state.date.toString()), "yyyy-MM-dd HH:mm")
       : undefined,
   });
 };
@@ -92,6 +92,9 @@ watch(
         supplierOption: "",
       });
     } else {
+      // @ts-ignore
+      state.date = new Date();
+
       getSuppliers(true);
       if (
         [UserRole.SUPERADMIN].includes(user.value?.role || ("" as UserRole))
@@ -184,9 +187,9 @@ const dateValidation = async () => {
               <UInput
                 :model-value="
                   state.date &&
-                  format(new Date(state.date.toString()), 'dd/MM/yyy')
+                  format(new Date(state.date.toString()), 'dd/MM/yyy HH:mm')
                 "
-                placeholder="DD/MM/YYYY"
+                placeholder="DD/MM/YYYY HH:mm"
                 autocomplete="off"
                 @keydown="
                   (e: any) => {
@@ -205,7 +208,7 @@ const dateValidation = async () => {
               <template #panel>
                 <InputsDatePicker
                   v-model="state.date"
-                  mode="date"
+                  mode="datetime"
                   :max-date="new Date()"
                   is-required
                   @close="dateValidation()"

@@ -7,6 +7,7 @@ interface Payload {
   date: string;
   cashAmount: number;
   totalAmount: number;
+  plusMinus: number;
   systemAmount: number;
   comment?: string;
   shopId: string;
@@ -34,9 +35,10 @@ export default defineEventHandler(async (event) => {
 
   try {
     return await db.Draws.create({
-      date: format(date, "yyyy-MM-dd"),
+      date: format(date, "yyyy-MM-dd HH:mm"),
       cashAmount: body.cashAmount,
       totalAmount: body.totalAmount,
+      plusMinus: body.plusMinus,
       systemAmount: body.systemAmount,
       comment: body.comment || undefined,
       shopId: shopId,

@@ -68,7 +68,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   emits("onSubmit", {
     ...state,
     date: state.dateObject
-      ? format(new Date(state.dateObject.toString()), "yyyy-MM-dd")
+      ? format(new Date(state.dateObject.toString()), "yyyy-MM-dd HH:mm")
       : undefined,
   });
 };
@@ -189,9 +189,12 @@ const dateValidation = async () => {
               <UInput
                 :model-value="
                   state.date &&
-                  format(new Date(state.dateObject.toString()), 'dd/MM/yyy')
+                  format(
+                    new Date(state.dateObject.toString()),
+                    'dd/MM/yyy HH:mm',
+                  )
                 "
-                placeholder="DD/MM/YYYY"
+                placeholder="DD/MM/YYYY HH:mm"
                 autocomplete="off"
                 @keydown="
                   (e: any) => {
@@ -210,7 +213,7 @@ const dateValidation = async () => {
               <template #panel>
                 <InputsDatePicker
                   v-model="state.dateObject"
-                  mode="date"
+                  mode="datetime"
                   :max-date="new Date()"
                   is-required
                   @close="dateValidation()"

@@ -30,7 +30,7 @@ export default (sequelize, DataTypes) => {
 
   Purchases.init(
     {
-      date: DataTypes.DATEONLY,
+      date: DataTypes.DATE,
       amount: DataTypes.DOUBLE(10, 2),
       isDeclared: DataTypes.BOOLEAN,
       invoiceNumber: DataTypes.STRING,

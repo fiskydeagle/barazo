@@ -1,4 +1,5 @@
-import type { Draw } from "~/types";
+import type { Draw, Purchase } from "~/types";
+import { format } from "date-fns";
 
 export const useDraw = () => {
   const toast = useToast();
@@ -112,6 +113,26 @@ export const useDraw = () => {
     return true;
   };
 
+  const infos = ref<{
+    purchases: Purchase[];
+    draws: Draw[];
+  }>();
+
+  const getInfos = async (
+    shopId: string,
+    date: string = format(new Date(), "yyyy-MM-dd HH:mm"),
+  ) => {
+    try {
+      infos.value = await $fetch("/api/draw/infos", {
+        method: "GET",
+        query: {
+          shopId: shopId,
+          date: date,
+        },
+      });
+    } catch (error: any) {}
+  };
+
   return {
     draws,
 
@@ -119,5 +140,8 @@ export const useDraw = () => {
     addDraw,
     updateDraw,
     deleteDraw,
+
+    infos,
+    getInfos,
   };
 };

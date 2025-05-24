@@ -11,13 +11,17 @@ module.exports = {
       },
       date: {
         allowNull: false,
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATE,
       },
       cashAmount: {
         allowNull: false,
         type: Sequelize.DOUBLE(10, 2),
       },
       totalAmount: {
+        allowNull: false,
+        type: Sequelize.DOUBLE(10, 2),
+      },
+      plusMinus: {
         allowNull: false,
         type: Sequelize.DOUBLE(10, 2),
       },

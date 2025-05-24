@@ -86,6 +86,7 @@ export interface Draw {
   date: string;
   cashAmount: number;
   totalAmount: number;
+  plusMinus: number;
   systemAmount: number;
   comment?: string;
   shopId: number;
