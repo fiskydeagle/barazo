@@ -22,6 +22,6 @@
     "database": "barazo_db",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "timezone": "+01:00"
+    "timezone": "+03:00"
   }
 }
