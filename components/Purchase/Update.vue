@@ -68,7 +68,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   emits("onSubmit", {
     ...state,
     date: state.dateObject
-      ? format(new Date(state.dateObject.toString()), "yyyy-MM-dd HH:mm")
+      ? new Date(state.dateObject.toString()).toISOString()
       : undefined,
   });
 };

@@ -175,7 +175,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   emits("onSubmit", {
     ...state,
     date: state.date
-      ? format(new Date(state.date.toString()), "yyyy-MM-dd HH:mm")
+      ? new Date(state.date.toString()).toISOString()
       : undefined,
     totalAmount: (state.cashAmount || 0) - lastCashAmount.value,
     plusMinus:
