@@ -105,6 +105,7 @@ pages:
     add-shop: "Add Shop"
   purchases:
     purchases: "Purchases"
+    total: "Total"
     id: "ID"
     date: "Date"
     amount: "Amount"
@@ -122,6 +123,8 @@ pages:
     add-purchase: "Add Purchase"
   draws:
     draws: "Draws"
+    total: "Total"
+    netTotal: "Net Total"
     id: "ID"
     date: "Date"
     cashAmount: "Cash Amount"

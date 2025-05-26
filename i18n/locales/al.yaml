@@ -105,6 +105,7 @@ pages:
     add-shop: "Shto Dyqan"
   purchases:
     purchases: "Blerjet"
+    total: "Totali"
     id: "ID"
     date: "Data"
     amount: "Shuma"
@@ -122,6 +123,8 @@ pages:
     add-purchase: "Shto Blerje"
   draws:
     draws: "Barazimet"
+    total: "Totali"
+    netTotal: "Totali Neto"
     id: "ID"
     date: "Data"
     cashAmount: "Shuma Kesh"

@@ -2,6 +2,10 @@
 import { format } from "date-fns";
 import { usePurchase } from "~/composables/usePurchase";
 import { type Purchase } from "~/types";
+import type {
+  DatePickerDate,
+  DatePickerRangeObject,
+} from "v-calendar/dist/types/src/use/datePicker.d.ts";
 
 const i18n = useI18n();
 const route = useRoute();
@@ -82,7 +86,7 @@ const columns = [
   {
     key: "createdAt",
     label: i18n.t("pages.purchases.created-at"),
-    isVisible: true,
+    isVisible: false,
     sortable: true,
   },
   {
@@ -112,6 +116,10 @@ const columns = [
 ];
 
 const searchWord = ref<string>();
+const dateRange = ref<DatePickerRangeObject>({
+  start: null as DatePickerDate,
+  end: null as DatePickerDate,
+} as DatePickerRangeObject);
 
 const purchasesRows = computed(() => {
   return purchases.value
@@ -159,9 +167,6 @@ const purchasesRows = computed(() => {
     .filter((order) => {
       if (!searchWord.value) return true;
       return (
-        order.dateDate
-          ?.toLowerCase()
-          .includes(searchWord.value?.toLowerCase()) ||
         order.amount?.toString().includes(searchWord.value?.toLowerCase()) ||
         order.invoiceNumber
           ?.toLowerCase()
@@ -170,10 +175,7 @@ const purchasesRows = computed(() => {
         order.supplier
           ?.toLowerCase()
           .includes(searchWord.value?.toLowerCase()) ||
-        order.createdAtDate
-          ?.toLowerCase()
-          .includes(searchWord.value?.toLowerCase()) ||
-        order.updatedAtDate
+        order.comment
           ?.toLowerCase()
           .includes(searchWord.value?.toLowerCase()) ||
         order.createdBy
@@ -181,7 +183,28 @@ const purchasesRows = computed(() => {
           .includes(searchWord.value?.toLowerCase()) ||
         order.updatedBy?.toLowerCase().includes(searchWord.value?.toLowerCase())
       );
+    })
+    .filter((order) => {
+      if (!dateRange.value.start || !dateRange.value.end) return true;
+
+      const orderDate = new Date(order.date).getTime();
+      const startDate = new Date(dateRange.value.start.toString()).getTime();
+      const endDate = new Date(dateRange.value.end.toString()).setHours(
+        23,
+        59,
+        59,
+      );
+
+      return orderDate >= startDate && orderDate <= endDate;
     });
+});
+
+const allAmount = computed(() => {
+  if (!purchasesRows.value || !purchasesRows.value.length) return 0;
+
+  return purchasesRows.value.reduce((acc, row) => {
+    return acc + (row.amount || 0);
+  }, 0);
 });
 
 const purchaseAddModal = ref<boolean>(false);
@@ -253,15 +276,87 @@ onMounted(() => {
       {{ i18n.t("pages.purchases.purchases") }}
     </h1>
     <div class="px-3 pb-3 border-b border-gray-200 dark:border-gray-700">
-      <div class="flex flex-wrap justify-between items-end gap-2">
-        <UFormGroup size="lg" :label="i18n.t('common.search')">
-          <UInput v-model="searchWord" />
-        </UFormGroup>
+      <div class="flex flex-wrap justify-between items-end gap-2 mb-4">
+        <div class="flex flex-wrap justify-between gap-2">
+          <UFormGroup size="lg" :label="i18n.t('common.search')">
+            <UInput v-model="searchWord" />
+          </UFormGroup>
+
+          <UFormGroup size="lg" :label="i18n.t('pages.draws.date')" name="date">
+            <UPopover
+              :popper="{ placement: 'bottom-start' }"
+              class="[&>*]:block"
+            >
+              <UInput
+                :model-value="
+                  dateRange.start && dateRange.end
+                    ? `${format(
+                        new Date(dateRange.start.toString()),
+                        'dd/MM/yyy',
+                      )} - ${format(
+                        new Date(dateRange.end.toString()),
+                        'dd/MM/yyy',
+                      )}`
+                    : '-'
+                "
+                placeholder="DD/MM/YYYY HH:mm"
+                autocomplete="off"
+                @keydown="
+                  (e: any) => {
+                    if (e.which !== 9) e.preventDefault();
+                  }
+                "
+                :ui="{ icon: { trailing: { pointer: '' } } }"
+              >
+                <template #leading>
+                  <UIcon
+                    class="text-neutral-500 pointer-events-none text-xl"
+                    name="fa6-regular:calendar-days"
+                  />
+                </template>
+
+                <template v-if="dateRange.start && dateRange.end" #trailing>
+                  <UButton
+                    icon="i-heroicons-x-mark"
+                    size="xs"
+                    color="gray"
+                    variant="ghost"
+                    class="-mr-2"
+                    @click.prevent="
+                      dateRange = {
+                        start: null as DatePickerDate,
+                        end: null as DatePickerDate,
+                      } as DatePickerRangeObject
+                    "
+                  />
+                </template>
+              </UInput>
+
+              <template #panel>
+                <InputsDatePicker
+                  v-model="dateRange"
+                  mode="date"
+                  :is-range="true"
+                  :max-date="new Date()"
+                  is-required
+                />
+              </template>
+            </UPopover>
+          </UFormGroup>
+        </div>
 
         <UButton size="lg" type="button" @click="addPurchaseAction">
           {{ i18n.t("pages.purchases.add-purchase") }}
         </UButton>
       </div>
+      <ClientOnly>
+        <div class="flex flex-col">
+          <h4 class="text-lg">
+            {{ i18n.t("pages.purchases.total") }}:
+            <span class="font-semibold">{{ allAmount.toFixed(2) }}€</span>
+          </h4>
+        </div>
+      </ClientOnly>
     </div>
 
     <ClientOnly>
