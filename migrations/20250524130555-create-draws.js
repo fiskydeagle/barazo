@@ -21,6 +21,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DOUBLE(10, 2),
       },
+      totalNetAmount: {
+        allowNull: false,
+        type: Sequelize.DOUBLE(10, 2),
+      },
       plusMinus: {
         allowNull: false,
         type: Sequelize.DOUBLE(10, 2),

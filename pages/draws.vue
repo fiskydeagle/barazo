@@ -52,6 +52,12 @@ const columns = [
     sortable: true,
   },
   {
+    key: "totalNetAmount",
+    label: i18n.t("pages.draws.totalNetAmount"),
+    isVisible: true,
+    sortable: true,
+  },
+  {
     key: "plusMinus",
     label: i18n.t("pages.draws.plusMinus"),
     isVisible: true,
@@ -125,6 +131,7 @@ const drawsRows = computed(() => {
         dateDate: format(new Date(draw.date), "dd.MM.yyyy HH:mm"),
         cashAmount: draw.cashAmount,
         totalAmount: draw.totalAmount,
+        totalNetAmount: draw.totalNetAmount,
         plusMinus: draw.plusMinus,
         systemAmount: draw.systemAmount,
         comment: draw.comment,
@@ -150,6 +157,9 @@ const drawsRows = computed(() => {
           ?.toLowerCase()
           .includes(searchWord.value?.toLowerCase()) ||
         order.totalAmount
+          ?.toString()
+          .includes(searchWord.value?.toLowerCase()) ||
+        order.totalNetAmount
           ?.toString()
           .includes(searchWord.value?.toLowerCase()) ||
         order.plusMinus?.toString().includes(searchWord.value?.toLowerCase()) ||
@@ -266,6 +276,10 @@ onMounted(() => {
 
         <template #totalAmount-data="{ row }">
           {{ row.totalAmount.toFixed(2) }}€
+        </template>
+
+        <template #totalNetAmount-data="{ row }">
+          {{ row.totalNetAmount.toFixed(2) }}€
         </template>
 
         <template #plusMinus-data="{ row }">

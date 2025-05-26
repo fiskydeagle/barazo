@@ -165,6 +165,7 @@ const state = reactive({
   date: undefined as string | undefined,
   cashAmount: undefined,
   totalAmount: undefined as number | undefined,
+  totalNetAmount: undefined as number | undefined,
   plusMinus: undefined as number | undefined,
   systemAmount: undefined,
   comment: undefined,
@@ -177,7 +178,11 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     date: state.date
       ? new Date(state.date.toString()).toISOString()
       : undefined,
-    totalAmount: (state.cashAmount || 0) - lastCashAmount.value,
+    totalAmount:
+      totalCurrentPurchase.value +
+      (state.cashAmount || 0) -
+      lastCashAmount.value,
+    totalNetAmount: (state.cashAmount || 0) - lastCashAmount.value,
     plusMinus:
       totalCurrentPurchase.value +
       (state.cashAmount || 0) -
@@ -201,6 +206,7 @@ watch(
         date: undefined,
         cashAmount: undefined,
         totalAmount: undefined,
+        totalNetAmount: undefined,
         plusMinus: undefined,
         systemAmount: undefined,
         comment: undefined,

@@ -126,6 +126,7 @@ pages:
     date: "Date"
     cashAmount: "Cash Amount"
     totalAmount: "Total Amount"
+    totalNetAmount: "Total Net Amount"
     plusMinus: "Plus/Minus"
     systemAmount: "System Amount"
     comment: "Comment"

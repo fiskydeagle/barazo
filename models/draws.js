@@ -29,6 +29,7 @@ export default (sequelize, DataTypes) => {
       date: DataTypes.DATE,
       cashAmount: DataTypes.DOUBLE(10, 2),
       totalAmount: DataTypes.DOUBLE(10, 2),
+      totalNetAmount: DataTypes.DOUBLE(10, 2),
       plusMinus: DataTypes.DOUBLE(10, 2),
       systemAmount: DataTypes.DOUBLE(10, 2),
       comment: DataTypes.TEXT,

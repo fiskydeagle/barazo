@@ -126,6 +126,7 @@ pages:
     date: "Data"
     cashAmount: "Shuma Kesh"
     totalAmount: "Shuma Totale"
+    totalNetAmount: "Shuma Totale Neto"
     plusMinus: "Plus/Minus"
     systemAmount: "Shuma në Sistem"
     comment: "Komenti"

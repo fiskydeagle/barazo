@@ -7,6 +7,7 @@ interface Payload {
   date: string;
   cashAmount: number;
   totalAmount: number;
+  totalNetAmount: number;
   plusMinus: number;
   systemAmount: number;
   comment?: string;
@@ -38,6 +39,7 @@ export default defineEventHandler(async (event) => {
       date: format(date, "yyyy-MM-dd HH:mm"),
       cashAmount: body.cashAmount,
       totalAmount: body.totalAmount,
+      totalNetAmount: body.totalNetAmount,
       plusMinus: body.plusMinus,
       systemAmount: body.systemAmount,
       comment: body.comment || undefined,
