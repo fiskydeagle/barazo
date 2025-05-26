@@ -265,7 +265,7 @@ const dateValidation = async () => {
   <UModal
     v-model="isOpen"
     :ui="{
-      width: 'w-full sm:max-w-md',
+      width: 'w-full sm:max-w-xl',
     }"
   >
     <UForm
@@ -299,159 +299,172 @@ const dateValidation = async () => {
         </template>
 
         <div class="flex flex-col gap-4">
-          <UFormGroup
-            v-if="
-              [UserRole.SUPERADMIN].includes(user?.role || ('' as UserRole))
-            "
-            size="lg"
-            :label="i18n.t('components.draw.add.shop')"
-            name="shopId"
-          >
-            <USelectMenu
-              v-model="state.shopId"
-              searchable
-              :searchable-placeholder="
-                i18n.t('components.draw.add.search-shop')
+          <div class="flex gap-4">
+            <UFormGroup
+              v-if="
+                [UserRole.SUPERADMIN].includes(user?.role || ('' as UserRole))
               "
-              :placeholder="i18n.t('components.draw.add.shop')"
-              :options="shops"
-              value-attribute="id"
-              option-attribute="name"
-              :search-attributes="['name']"
-            />
-          </UFormGroup>
-
-          <UFormGroup
-            v-if="
-              [UserRole.SUPERADMIN, UserRole.ADMIN].includes(
-                user?.role || UserRole.ADMIN,
-              )
-            "
-            size="lg"
-            :label="i18n.t('components.draw.add.date')"
-            name="date"
-          >
-            <UPopover
-              :popper="{ placement: 'bottom-start' }"
-              class="[&>*]:block"
+              size="lg"
+              :label="i18n.t('components.draw.add.shop')"
+              name="shopId"
+              class="w-full"
             >
-              <UInput
-                :model-value="
-                  state.date &&
-                  format(new Date(state.date.toString()), 'dd/MM/yyy HH:mm')
+              <USelectMenu
+                v-model="state.shopId"
+                searchable
+                :searchable-placeholder="
+                  i18n.t('components.draw.add.search-shop')
                 "
-                placeholder="DD/MM/YYYY HH:mm"
-                autocomplete="off"
-                @keydown="
-                  (e: any) => {
-                    if (e.which !== 9) e.preventDefault();
-                  }
-                "
+                :placeholder="i18n.t('components.draw.add.shop')"
+                :options="shops"
+                value-attribute="id"
+                option-attribute="name"
+                :search-attributes="['name']"
+              />
+            </UFormGroup>
+
+            <UFormGroup
+              v-if="
+                [UserRole.SUPERADMIN, UserRole.ADMIN].includes(
+                  user?.role || UserRole.ADMIN,
+                )
+              "
+              size="lg"
+              :label="i18n.t('components.draw.add.date')"
+              name="date"
+              class="w-full"
+            >
+              <UPopover
+                :popper="{ placement: 'bottom-start' }"
+                class="[&>*]:block"
               >
-                <template #leading>
-                  <UIcon
-                    class="text-neutral-500 pointer-events-none text-xl"
-                    name="fa6-regular:calendar-days"
+                <UInput
+                  :model-value="
+                    state.date &&
+                    format(new Date(state.date.toString()), 'dd/MM/yyy HH:mm')
+                  "
+                  placeholder="DD/MM/YYYY HH:mm"
+                  autocomplete="off"
+                  @keydown="
+                    (e: any) => {
+                      if (e.which !== 9) e.preventDefault();
+                    }
+                  "
+                >
+                  <template #leading>
+                    <UIcon
+                      class="text-neutral-500 pointer-events-none text-xl"
+                      name="fa6-regular:calendar-days"
+                    />
+                  </template>
+                </UInput>
+
+                <template #panel>
+                  <InputsDatePicker
+                    v-model="state.date"
+                    mode="datetime"
+                    :max-date="new Date()"
+                    is-required
+                    @close="dateValidation()"
                   />
                 </template>
-              </UInput>
-
-              <template #panel>
-                <InputsDatePicker
-                  v-model="state.date"
-                  mode="datetime"
-                  :max-date="new Date()"
-                  is-required
-                  @close="dateValidation()"
-                />
-              </template>
-            </UPopover>
-          </UFormGroup>
+              </UPopover>
+            </UFormGroup>
+          </div>
 
           <UFormGroup
             size="lg"
             :label="i18n.t('components.draw.add.totalPurchase')"
             name="totalCurrentPurchase"
+            class="w-full"
           >
             <p>{{ totalCurrentPurchase.toFixed(2) }}€</p>
           </UFormGroup>
 
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.draw.add.cashAmount')"
-            name="cashAmount"
-          >
-            <UInput
-              type="number"
-              :min="0.01"
-              :step="0.01"
-              v-model="state.cashAmount"
-            />
-          </UFormGroup>
+          <div class="flex gap-4">
+            <UFormGroup
+              size="lg"
+              :label="i18n.t('components.draw.add.cashAmount')"
+              name="cashAmount"
+              class="w-full"
+            >
+              <UInput
+                type="number"
+                :min="0.01"
+                :step="0.01"
+                v-model="state.cashAmount"
+              />
+            </UFormGroup>
 
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.draw.add.totalAmount')"
-            name="totalAmount"
-          >
-            <p>
-              {{
-                state.cashAmount
-                  ? (
-                      totalCurrentPurchase +
-                      state.cashAmount -
-                      lastCashAmount
-                    ).toFixed(2)
-                  : "0.00"
-              }}€
-            </p>
-          </UFormGroup>
+            <UFormGroup
+              size="lg"
+              :label="i18n.t('components.draw.add.systemAmount')"
+              name="systemAmount"
+              class="w-full"
+            >
+              <UInput
+                type="number"
+                :min="0.01"
+                :step="0.01"
+                v-model="state.systemAmount"
+              />
+            </UFormGroup>
+          </div>
 
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.draw.add.systemAmount')"
-            name="systemAmount"
-          >
-            <UInput
-              type="number"
-              :min="0.01"
-              :step="0.01"
-              v-model="state.systemAmount"
-            />
-          </UFormGroup>
+          <div class="flex gap-4">
+            <UFormGroup
+              size="lg"
+              :label="i18n.t('components.draw.add.totalAmount')"
+              name="totalAmount"
+              class="w-full"
+            >
+              <p>
+                {{
+                  state.cashAmount
+                    ? (
+                        totalCurrentPurchase +
+                        state.cashAmount -
+                        lastCashAmount
+                      ).toFixed(2)
+                    : "0.00"
+                }}€
+              </p>
+            </UFormGroup>
 
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.draw.add.result')"
-            name="result"
-          >
-            <p>
-              {{
-                state.cashAmount && state.systemAmount
-                  ? (state.systemAmount - lastSystemAmount).toFixed(2)
-                  : "0.00"
-              }}€
-            </p>
-          </UFormGroup>
-
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.draw.add.plus-minus')"
-            name="plusMinus"
-          >
-            <p>
-              {{
-                state.cashAmount && state.systemAmount
-                  ? (
-                      totalCurrentPurchase +
-                      state.cashAmount -
-                      lastCashAmount -
-                      (state.systemAmount - lastSystemAmount)
-                    ).toFixed(2)
-                  : "0.00"
-              }}€
-            </p>
-          </UFormGroup>
+            <div class="flex gap-4 w-full justify-between">
+              <UFormGroup
+                size="lg"
+                :label="i18n.t('components.draw.add.result')"
+                name="result"
+              >
+                <p>
+                  {{
+                    state.cashAmount && state.systemAmount
+                      ? (state.systemAmount - lastSystemAmount).toFixed(2)
+                      : "0.00"
+                  }}€
+                </p>
+              </UFormGroup>
+              <UFormGroup
+                size="lg"
+                :label="i18n.t('components.draw.add.plus-minus')"
+                name="plusMinus"
+              >
+                <p>
+                  {{
+                    state.cashAmount && state.systemAmount
+                      ? (
+                          totalCurrentPurchase +
+                          state.cashAmount -
+                          lastCashAmount -
+                          (state.systemAmount - lastSystemAmount)
+                        ).toFixed(2)
+                      : "0.00"
+                  }}€
+                </p>
+              </UFormGroup>
+            </div>
+          </div>
 
           <UFormGroup
             size="lg"

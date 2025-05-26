@@ -258,7 +258,7 @@ const dateValidation = async () => {
   <UModal
     v-model="isOpen"
     :ui="{
-      width: 'w-full sm:max-w-md',
+      width: 'w-full sm:max-w-xl',
     }"
   >
     <UForm
@@ -292,125 +292,141 @@ const dateValidation = async () => {
         </template>
 
         <div class="flex flex-col gap-4">
-          <UFormGroup
-            v-if="
-              [UserRole.SUPERADMIN].includes(user?.role || ('' as UserRole))
-            "
-            size="lg"
-            :label="i18n.t('components.draw.update.shop')"
-            name="shopId"
-          >
-            <p>
-              {{
-                shops ? shops.find((shop) => shop.id == state.shopId)?.name : ""
-              }}
-            </p>
-          </UFormGroup>
+          <div class="flex gap-4">
+            <UFormGroup
+              v-if="
+                [UserRole.SUPERADMIN].includes(user?.role || ('' as UserRole))
+              "
+              size="lg"
+              :label="i18n.t('components.draw.update.shop')"
+              name="shopId"
+              class="w-full"
+            >
+              <p>
+                {{
+                  shops
+                    ? shops.find((shop) => shop.id == state.shopId)?.name
+                    : ""
+                }}
+              </p>
+            </UFormGroup>
 
-          <UFormGroup
-            v-if="
-              [UserRole.SUPERADMIN, UserRole.ADMIN].includes(
-                user?.role || UserRole.ADMIN,
-              )
-            "
-            size="lg"
-            :label="i18n.t('components.draw.update.date')"
-            name="date"
-          >
-            <p>
-              {{
-                format(
-                  new Date(state.dateObject.toString()),
-                  "yyyy-MM-dd HH:mm",
+            <UFormGroup
+              v-if="
+                [UserRole.SUPERADMIN, UserRole.ADMIN].includes(
+                  user?.role || UserRole.ADMIN,
                 )
-              }}
-            </p>
-          </UFormGroup>
+              "
+              size="lg"
+              :label="i18n.t('components.draw.update.date')"
+              name="date"
+              class="w-full"
+            >
+              <p>
+                {{
+                  format(
+                    new Date(state.dateObject.toString()),
+                    "yyyy-MM-dd HH:mm",
+                  )
+                }}
+              </p>
+            </UFormGroup>
+          </div>
 
           <UFormGroup
             size="lg"
             :label="i18n.t('components.draw.update.totalPurchase')"
             name="totalCurrentPurchase"
+            class="w-full"
           >
             <p>{{ totalCurrentPurchase.toFixed(2) }}€</p>
           </UFormGroup>
 
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.draw.update.cashAmount')"
-            name="cashAmount"
-          >
-            <UInput
-              type="number"
-              :min="0.01"
-              :step="0.01"
-              v-model="state.cashAmount"
-            />
-          </UFormGroup>
+          <div class="flex gap-4">
+            <UFormGroup
+              size="lg"
+              :label="i18n.t('components.draw.update.cashAmount')"
+              name="cashAmount"
+              class="w-full"
+            >
+              <UInput
+                type="number"
+                :min="0.01"
+                :step="0.01"
+                v-model="state.cashAmount"
+              />
+            </UFormGroup>
 
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.draw.update.totalAmount')"
-            name="totalAmount"
-          >
-            <p>
-              {{
-                state.cashAmount
-                  ? (
-                      totalCurrentPurchase +
-                      state.cashAmount -
-                      lastCashAmount
-                    ).toFixed(2)
-                  : "0.00"
-              }}€
-            </p>
-          </UFormGroup>
+            <UFormGroup
+              size="lg"
+              :label="i18n.t('components.draw.update.systemAmount')"
+              name="systemAmount"
+              class="w-full"
+            >
+              <UInput
+                type="number"
+                :min="0.01"
+                :step="0.01"
+                v-model="state.systemAmount"
+              />
+            </UFormGroup>
+          </div>
 
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.draw.update.systemAmount')"
-            name="systemAmount"
-          >
-            <UInput
-              type="number"
-              :min="0.01"
-              :step="0.01"
-              v-model="state.systemAmount"
-            />
-          </UFormGroup>
+          <div class="flex gap-4">
+            <UFormGroup
+              size="lg"
+              :label="i18n.t('components.draw.update.totalAmount')"
+              name="totalAmount"
+              class="w-full"
+            >
+              <p>
+                {{
+                  state.cashAmount
+                    ? (
+                        totalCurrentPurchase +
+                        state.cashAmount -
+                        lastCashAmount
+                      ).toFixed(2)
+                    : "0.00"
+                }}€
+              </p>
+            </UFormGroup>
 
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.draw.update.result')"
-            name="result"
-          >
-            <p>
-              {{
-                state.cashAmount && state.systemAmount
-                  ? (state.systemAmount - lastSystemAmount).toFixed(2)
-                  : "0.00"
-              }}€
-            </p>
-          </UFormGroup>
+            <div class="flex gap-4 w-full justify-between">
+              <UFormGroup
+                size="lg"
+                :label="i18n.t('components.draw.update.result')"
+                name="result"
+              >
+                <p>
+                  {{
+                    state.cashAmount && state.systemAmount
+                      ? (state.systemAmount - lastSystemAmount).toFixed(2)
+                      : "0.00"
+                  }}€
+                </p>
+              </UFormGroup>
 
-          <UFormGroup
-            size="lg"
-            :label="i18n.t('components.draw.update.plus-minus')"
-            name="plusMinus"
-          >
-            <p>
-              {{
-                state.cashAmount && state.systemAmount
-                  ? (
-                      totalCurrentPurchase +
-                      state.cashAmount -
-                      lastCashAmount -
-                      (state.systemAmount - lastSystemAmount)
-                    ).toFixed(2)
-                  : "0.00"
-              }}€
-            </p>
-          </UFormGroup>
+              <UFormGroup
+                size="lg"
+                :label="i18n.t('components.draw.update.plus-minus')"
+                name="plusMinus"
+              >
+                <p>
+                  {{
+                    state.cashAmount && state.systemAmount
+                      ? (
+                          totalCurrentPurchase +
+                          state.cashAmount -
+                          lastCashAmount -
+                          (state.systemAmount - lastSystemAmount)
+                        ).toFixed(2)
+                      : "0.00"
+                  }}€
+                </p>
+              </UFormGroup>
+            </div>
+          </div>
 
           <UFormGroup
             size="lg"
