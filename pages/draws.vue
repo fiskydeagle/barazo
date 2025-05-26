@@ -309,6 +309,7 @@ onMounted(() => {
                   }
                 "
                 :ui="{ icon: { trailing: { pointer: '' } } }"
+                class="min-w-[268px]"
               >
                 <template #leading>
                   <UIcon

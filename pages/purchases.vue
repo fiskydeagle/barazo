@@ -282,7 +282,11 @@ onMounted(() => {
             <UInput v-model="searchWord" />
           </UFormGroup>
 
-          <UFormGroup size="lg" :label="i18n.t('pages.draws.date')" name="date">
+          <UFormGroup
+            size="lg"
+            :label="i18n.t('pages.purchases.date')"
+            name="date"
+          >
             <UPopover
               :popper="{ placement: 'bottom-start' }"
               class="[&>*]:block"
@@ -307,6 +311,7 @@ onMounted(() => {
                   }
                 "
                 :ui="{ icon: { trailing: { pointer: '' } } }"
+                class="min-w-[268px]"
               >
                 <template #leading>
                   <UIcon
