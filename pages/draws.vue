@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { format } from "date-fns";
 import { useDraw } from "~/composables/useDraw";
+import { usePurchase } from "~/composables/usePurchase";
 import { type Draw } from "~/types";
 import type {
   DatePickerDate,
@@ -35,6 +36,29 @@ const {
   deleteDraw,
 } = useDraw();
 await getDraws();
+
+const { outsidePurchases, getOutsidePurchases } = usePurchase();
+getOutsidePurchases();
+
+const totalOutsidePurchases = computed(() => {
+  if (!outsidePurchases.value || !outsidePurchases.value.length) return 0;
+
+  return outsidePurchases.value
+    .filter((group) => {
+      if (!dateRange.value.start || !dateRange.value.end) return true;
+
+      const orderDate = new Date(group.date).getTime();
+      const startDate = new Date(dateRange.value.start.toString()).getTime();
+      const endDate = new Date(dateRange.value.end.toString()).setHours(
+        23,
+        59,
+        59,
+      );
+
+      return orderDate >= startDate && orderDate <= endDate;
+    })
+    .reduce((acc, purchase) => acc + (purchase.amount || 0), 0);
+});
 
 const columns = [
   {
@@ -343,6 +367,14 @@ onMounted(() => {
               >{{ allTotalNetAmount.toFixed(2) }}€</span
             >
           </h4>
+          <h4 class="text-lg">
+            {{ i18n.t("pages.draws.grandTotal") }}:
+            <span class="font-semibold"
+              >{{
+                (allTotalNetAmount - totalOutsidePurchases).toFixed(2)
+              }}€</span
+            >
+          </h4>
         </div>
       </ClientOnly>
     </div>
@@ -399,12 +431,6 @@ onMounted(() => {
                       >{{ i18n.t("pages.draws.plusMinus") }}:</span
                     >
                     {{ draw.plusMinus.toFixed(2) }}€
-                  </p>
-                  <p>
-                    <span class="font-medium"
-                      >{{ i18n.t("pages.draws.shop") }}:</span
-                    >
-                    {{ draw.shop?.name || "-" }}
                   </p>
                   <p>
                     <span class="font-medium"

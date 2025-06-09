@@ -65,6 +65,7 @@ export interface Purchase {
   date: string;
   amount: number;
   isDeclared: boolean;
+  isOutside: boolean;
   invoiceNumber?: string;
   comment?: string;
   shopId: number;

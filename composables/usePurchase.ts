@@ -14,6 +14,16 @@ export const usePurchase = () => {
     } catch (error: any) {}
   };
 
+  const outsidePurchases = ref<Purchase[]>();
+
+  const getOutsidePurchases = async () => {
+    try {
+      outsidePurchases.value = await $fetch("/api/purchase/outside", {
+        method: "GET",
+      });
+    } catch (error: any) {}
+  };
+
   const addPurchase = async (state: {
     date: string | undefined;
     amount: number | undefined;
@@ -116,8 +126,11 @@ export const usePurchase = () => {
 
   return {
     purchases,
-
     getPurchases,
+
+    outsidePurchases,
+    getOutsidePurchases,
+
     addPurchase,
     updatePurchase,
     deletePurchase,

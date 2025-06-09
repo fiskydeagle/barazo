@@ -33,6 +33,7 @@ export default (sequelize, DataTypes) => {
       date: DataTypes.DATE,
       amount: DataTypes.DOUBLE(10, 2),
       isDeclared: DataTypes.BOOLEAN,
+      isOutside: DataTypes.BOOLEAN,
       invoiceNumber: DataTypes.STRING,
       comment: DataTypes.TEXT,
       shopId: DataTypes.INTEGER,

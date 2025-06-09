@@ -36,6 +36,7 @@ export default defineEventHandler(async (event) => {
         date: {
           [db.Sequelize.Op.between]: [startOfDay, endOfDay],
         },
+        isOutside: false,
         shopId: shopId,
       },
       include: ["createdByUser", "updatedByUser", "shop"],

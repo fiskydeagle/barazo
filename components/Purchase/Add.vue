@@ -54,6 +54,7 @@ const state = reactive({
   date: undefined as string | undefined,
   amount: undefined,
   isDeclared: false,
+  isOutside: false,
   invoiceNumber: undefined,
   comment: undefined,
   shopId: undefined,
@@ -85,6 +86,7 @@ watch(
         date: undefined,
         amount: undefined,
         isDeclared: false,
+        isOutside: false,
         invoiceNumber: undefined,
         comment: undefined,
         shopId: undefined,
@@ -288,13 +290,23 @@ const dateValidation = async () => {
             <UTextarea v-model="state.comment"></UTextarea>
           </UFormGroup>
 
-          <UFormGroup size="lg" name="isDeclared">
-            <UCheckbox
-              v-model="state.isDeclared"
-              name="isDeclared"
-              :label="i18n.t('components.purchase.add.is-declared')"
-            />
-          </UFormGroup>
+          <div class="flex justify-between">
+            <UFormGroup size="lg" name="isDeclared">
+              <UCheckbox
+                v-model="state.isDeclared"
+                name="isDeclared"
+                :label="i18n.t('components.purchase.add.is-declared')"
+              />
+            </UFormGroup>
+
+            <UFormGroup size="lg" name="isOutside">
+              <UCheckbox
+                v-model="state.isOutside"
+                name="isOutside"
+                :label="i18n.t('components.purchase.add.is-outside')"
+              />
+            </UFormGroup>
+          </div>
         </div>
 
         <template #footer>

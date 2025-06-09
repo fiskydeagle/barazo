@@ -7,6 +7,7 @@ interface Payload {
   date: string;
   amount: number;
   isDeclared: boolean;
+  isOutside: boolean;
   invoiceNumber?: string;
   comment?: string;
   shopId: string;
@@ -71,6 +72,7 @@ export default defineEventHandler(async (event) => {
       date: format(date, "yyyy-MM-dd HH:mm"),
       amount: body.amount,
       isDeclared: body.isDeclared,
+      isOutside: body.isOutside,
       invoiceNumber: body.invoiceNumber || undefined,
       comment: body.comment || undefined,
       shopId: shopId,

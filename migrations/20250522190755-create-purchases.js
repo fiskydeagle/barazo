@@ -22,6 +22,11 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
+      isOutside: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       invoiceNumber: {
         allowNull: true,
         type: Sequelize.STRING,

@@ -84,6 +84,12 @@ const columns = [
     sortable: true,
   },
   {
+    key: "isOutside",
+    label: i18n.t("pages.purchases.is-outside"),
+    isVisible: true,
+    sortable: true,
+  },
+  {
     key: "createdAt",
     label: i18n.t("pages.purchases.created-at"),
     isVisible: false,
@@ -144,6 +150,7 @@ const purchasesRows = computed(() => {
         dateDate: format(new Date(purchase.date), "dd.MM.yyyy HH:mm"),
         amount: purchase.amount,
         isDeclared: purchase.isDeclared,
+        isOutside: purchase.isOutside,
         invoiceNumber: purchase.invoiceNumber,
         comment: purchase.comment,
         shopId: purchase.shopId,
@@ -386,6 +393,21 @@ onMounted(() => {
                 disabled
                 :model-value="row.isDeclared"
                 name="isDeclaredList"
+                :ui="{
+                  base: '!cursor-default !opacity-100',
+                }"
+              />
+            </ClientOnly>
+          </div>
+        </template>
+
+        <template #isOutside-data="{ row }">
+          <div class="flex justify-center">
+            <ClientOnly>
+              <UCheckbox
+                disabled
+                :model-value="row.isOutside"
+                name="isOutsideList"
                 :ui="{
                   base: '!cursor-default !opacity-100',
                 }"
