@@ -38,12 +38,6 @@ await getDraws();
 
 const columns = [
   {
-    key: "id",
-    label: i18n.t("pages.draws.id"),
-    isVisible: false,
-    sortable: true,
-  },
-  {
     key: "date",
     label: i18n.t("pages.draws.date"),
     isVisible: true,
@@ -73,41 +67,6 @@ const columns = [
     isVisible: false,
     sortable: true,
   },
-  {
-    key: "comment",
-    label: i18n.t("pages.draws.comment"),
-    isVisible: true,
-  },
-  {
-    key: "createdAt",
-    label: i18n.t("pages.draws.created-at"),
-    isVisible: false,
-    sortable: true,
-  },
-  {
-    key: "updatedAt",
-    label: i18n.t("pages.draws.updated-at"),
-    isVisible: false,
-    sortable: true,
-  },
-  {
-    key: "createdBy",
-    label: i18n.t("pages.draws.created-by"),
-    isVisible: true,
-    sortable: true,
-  },
-  {
-    key: "updatedBy",
-    label: i18n.t("pages.draws.updated-by"),
-    isVisible: false,
-    sortable: true,
-  },
-  {
-    label: "",
-    key: "actions",
-    class: "w-1",
-    isVisible: true,
-  },
 ];
 
 const searchWord = ref<string>();
@@ -116,9 +75,41 @@ const dateRange = ref<DatePickerRangeObject>({
   end: null as DatePickerDate,
 } as DatePickerRangeObject);
 
+const groupedDraws = computed(() => {
+  if (!draws.value || !draws.value.length) return [];
+
+  const map = new Map<string, Draw[]>();
+
+  for (const draw of draws.value) {
+    const date = new Date(draw.date).toISOString().split("T")[0];
+    const shopId = draw.shopId;
+    const key = `${date}_${shopId}`;
+
+    if (!map.has(key)) {
+      map.set(key, []);
+    }
+
+    map.get(key)!.push(draw);
+  }
+
+  return Array.from(map.entries()).map(([key, draws]) => {
+    const [date, shopId] = key.split("_");
+    return {
+      date,
+      shopId,
+      draws,
+    };
+  });
+});
+
+const expand = ref({
+  openedRows: [],
+  row: {},
+});
+
 const drawsRows = computed(() => {
-  return draws.value
-    ?.map((draw) => {
+  return groupedDraws.value
+    ?.map((group) => {
       const actions = [
         {
           event: "update",
@@ -134,54 +125,42 @@ const drawsRows = computed(() => {
       });
 
       return {
-        id: draw.id,
-        date: new Date(draw.date).getTime(),
-        dateDate: format(new Date(draw.date), "dd.MM.yyyy HH:mm"),
-        cashAmount: draw.cashAmount,
-        totalAmount: draw.totalAmount,
-        totalNetAmount: draw.totalNetAmount,
-        plusMinus: draw.plusMinus,
-        systemAmount: draw.systemAmount,
-        comment: draw.comment,
-        shopId: draw.shopId,
-        shop: draw.shop?.name || "-",
-        createdAt: new Date(draw.createdAt).getTime(),
-        createdAtDate: format(new Date(draw.createdAt), "dd.MM.yyyy"),
-        updatedAt: new Date(draw.updatedAt).getTime(),
-        updatedAtDate: format(new Date(draw.updatedAt), "dd.MM.yyyy"),
-        createdBy: draw.createdByUser
-          ? `${draw.createdByUser.firstName} ${draw.createdByUser.lastName}`
-          : "-",
-        updatedBy: draw.updatedByUser
-          ? `${draw.updatedByUser.firstName} ${draw.updatedByUser.lastName}`
-          : "-",
-        actions,
+        date: new Date(group.date).getTime(),
+        dateDate: format(new Date(group.date), "dd.MM.yyyy"),
+        totalAmount: group.draws.reduce(
+          (acc, draw) => acc + (draw.totalAmount || 0),
+          0,
+        ),
+        totalNetAmount: group.draws.reduce(
+          (acc, draw) => acc + (draw.totalNetAmount || 0),
+          0,
+        ),
+        plusMinus: group.draws.reduce(
+          (acc, draw) => acc + (draw.plusMinus || 0),
+          0,
+        ),
+        shop: group.draws[0].shop?.name || "-",
+        draws: group.draws,
+        groupedActions: actions,
       };
     })
-    .filter((order) => {
+    .filter((group) => {
       if (!searchWord.value) return true;
       return (
-        order.totalAmount
+        group.totalAmount
           ?.toString()
           .includes(searchWord.value?.toLowerCase()) ||
-        order.totalNetAmount
+        group.totalNetAmount
           ?.toString()
           .includes(searchWord.value?.toLowerCase()) ||
-        order.plusMinus?.toString().includes(searchWord.value?.toLowerCase()) ||
-        order.shop?.toLowerCase().includes(searchWord.value?.toLowerCase()) ||
-        order.comment
-          ?.toLowerCase()
-          .includes(searchWord.value?.toLowerCase()) ||
-        order.createdBy
-          ?.toLowerCase()
-          .includes(searchWord.value?.toLowerCase()) ||
-        order.updatedBy?.toLowerCase().includes(searchWord.value?.toLowerCase())
+        group.plusMinus?.toString().includes(searchWord.value?.toLowerCase()) ||
+        group.shop?.toLowerCase().includes(searchWord.value?.toLowerCase())
       );
     })
-    .filter((order) => {
+    .filter((group) => {
       if (!dateRange.value.start || !dateRange.value.end) return true;
 
-      const orderDate = new Date(order.date).getTime();
+      const orderDate = new Date(group.date).getTime();
       const startDate = new Date(dateRange.value.start.toString()).getTime();
       const endDate = new Date(dateRange.value.end.toString()).setHours(
         23,
@@ -371,11 +350,10 @@ onMounted(() => {
     <ClientOnly>
       <DataTable
         :dynamic-columns="true"
+        v-model:expand="expand"
         :identifier="'data-table-draws'"
         :columns="columns"
         :rows="drawsRows"
-        @on-action-click="action"
-        @select="action({ event: 'update', row: $event })"
       >
         <template #date-data="{ row }">
           {{ row.dateDate }}
@@ -393,18 +371,130 @@ onMounted(() => {
           {{ row.plusMinus.toFixed(2) }}€
         </template>
 
-        <template #comment-data="{ row }">
-          <div class="whitespace-normal text-left">
-            {{ row.comment || "-" }}
+        <template #expand="{ row }">
+          <div class="py-4 flex flex-wrap gap-4">
+            <UCard v-for="draw in row.draws" :key="'draw-' + draw.id">
+              <div class="flex gap-2">
+                <div class="grow">
+                  <p>
+                    <span class="font-medium"
+                      >{{ i18n.t("pages.draws.date") }}:</span
+                    >
+                    {{ format(new Date(draw.date), "dd.MM.yyyy HH:mm") }}
+                  </p>
+                  <p>
+                    <span class="font-medium"
+                      >{{ i18n.t("pages.draws.totalAmount") }}:</span
+                    >
+                    {{ draw.totalAmount.toFixed(2) }}€
+                  </p>
+                  <p>
+                    <span class="font-medium"
+                      >{{ i18n.t("pages.draws.totalNetAmount") }}:</span
+                    >
+                    {{ draw.totalNetAmount.toFixed(2) }}€
+                  </p>
+                  <p>
+                    <span class="font-medium"
+                      >{{ i18n.t("pages.draws.plusMinus") }}:</span
+                    >
+                    {{ draw.plusMinus.toFixed(2) }}€
+                  </p>
+                  <p>
+                    <span class="font-medium"
+                      >{{ i18n.t("pages.draws.shop") }}:</span
+                    >
+                    {{ draw.shop?.name || "-" }}
+                  </p>
+                  <p>
+                    <span class="font-medium"
+                      >{{ i18n.t("pages.draws.comment") }}:</span
+                    >
+                    {{ draw.comment || "-" }}
+                  </p>
+                  <p>
+                    <span class="font-medium"
+                      >{{ i18n.t("pages.draws.created-at") }}:</span
+                    >
+                    {{ format(new Date(draw.createdAt), "dd.MM.yyyy HH:mm") }}
+                  </p>
+                  <p>
+                    <span class="font-medium"
+                      >{{ i18n.t("pages.draws.updated-at") }}:</span
+                    >
+                    {{ format(new Date(draw.updatedAt), "dd.MM.yyyy HH:mm") }}
+                  </p>
+                  <p>
+                    <span class="font-medium"
+                      >{{ i18n.t("pages.draws.created-by") }}:</span
+                    >
+                    {{
+                      draw.createdByUser
+                        ? `${draw.createdByUser.firstName} ${draw.createdByUser.lastName}`
+                        : "-"
+                    }}
+                  </p>
+                  <p>
+                    <span class="font-medium"
+                      >{{ i18n.t("pages.draws.updated-by") }}:</span
+                    >
+                    {{
+                      draw.updatedByUser
+                        ? `${draw.updatedByUser.firstName} ${draw.updatedByUser.lastName}`
+                        : "-"
+                    }}
+                  </p>
+                </div>
+                <div @click.stop="">
+                  <ClientOnly
+                    v-if="row.groupedActions && row.groupedActions.length"
+                    fallback-tag="span"
+                    fallback="Actions"
+                  >
+                    <UPopover
+                      class="flex justify-end [&>*]:block [&>*]:w-auto"
+                      :popper="{ placement: 'bottom-end' }"
+                    >
+                      <button
+                        class="flex justify-center items-center rounded text-neutral-500 hover:text-neutral-700 -mr-3"
+                      >
+                        <Icon name="fe:elipsis-v" class="text-3xl -mx-1" />
+                      </button>
+                      <template #panel="{ close }">
+                        <div
+                          class="flex flex-col rounded-2xl shadow-shadow-lg px-3 py-2"
+                        >
+                          <button
+                            v-for="groupedAction in row.groupedActions"
+                            :key="
+                              'action-btn-' +
+                              draw.id +
+                              '-' +
+                              groupedAction.event
+                            "
+                            type="button"
+                            class="py-2 pr-6 pl-0 body-1 text-left flex gap-2 group/action"
+                            @click.prevent="
+                              close();
+                              action({ event: groupedAction.event, row: draw });
+                            "
+                          >
+                            <Icon
+                              :name="groupedAction.icon"
+                              size="20"
+                              class="block text-neutral-500 group-hover/action:text-neutral-700"
+                            />
+                            {{ groupedAction.label }}
+                          </button>
+                        </div>
+                      </template>
+                    </UPopover>
+                  </ClientOnly>
+                  <template v-else> &nbsp; </template>
+                </div>
+              </div>
+            </UCard>
           </div>
-        </template>
-
-        <template #createdAt-data="{ row }">
-          {{ row.createdAtDate }}
-        </template>
-
-        <template #updatedAt-data="{ row }">
-          {{ row.updatedAtDate }}
         </template>
       </DataTable>
     </ClientOnly>
