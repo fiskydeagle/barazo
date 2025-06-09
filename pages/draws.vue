@@ -372,7 +372,7 @@ onMounted(() => {
         </template>
 
         <template #expand="{ row }">
-          <div class="py-4 flex flex-wrap gap-4">
+          <div class="py-4 flex max-md:flex-col items-start flex-wrap gap-4">
             <UCard v-for="draw in row.draws" :key="'draw-' + draw.id">
               <div class="flex gap-2">
                 <div class="grow">
